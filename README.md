@@ -8,7 +8,7 @@ Cynosure is a private AI workspace that brings your models, tools, memory, agent
 
 Key capabilities highlighted on the page:
 
-- **Memory & knowledge graph** — useful facts from conversations become connected knowledge about your projects, preferences, and people.
+- **Memory you own** — plain Markdown documents in folders, with focused recall, revision history, and background Dreaming Mode that keeps them current.
 - **Agents & tools** — add tools, create agents, and automate repetitive work.
 - **MCP directory** — discover and add MCP servers in a few clicks, powered by Smithery and the official MCP Registry.
 - **Remote chat & schedules** — keep conversations going from Telegram, Discord, or Slack, and schedule recurring work.
@@ -17,7 +17,7 @@ Key capabilities highlighted on the page:
 Cynosure is free to use and available for Windows, macOS, and Linux.
 
 - Documentation: https://cynosure-ai.github.io/docs/
-- Downloads: https://github.com/Cynosure-AI/cynosure-ai.github.io/releases
+- Downloads: https://github.com/Cynosure-AI/cynosure-app/releases
 
 ## About this repository
 
@@ -40,4 +40,4 @@ npm run build
 
 ### GitHub Pages
 
-The Pages workflow builds with Node 24 and publishes `.output/public`. In the repository's Pages settings, select **GitHub Actions** as the build and deployment source. GitHub Pages serves this repository at `https://cynosure-ai.github.io/Cynosure-AI/`. To serve the organization root at `https://cynosure-ai.github.io/`, rename the repository to `cynosure-ai.github.io`; the workflow will then use `/` as Nuxt's base path automatically. For a custom domain at its root, set the repository Actions variable `NUXT_APP_BASE_URL` to `/`.
+The Pages workflow builds with Node 24 and publishes `.output/public`. In the repository's Pages settings, select **GitHub Actions** as the build and deployment source. Because the repository is named `cynosure-ai.github.io`, GitHub Pages serves it at the organization root, `https://cynosure-ai.github.io/`, and the workflow uses `/` as Nuxt's base path. For a custom domain at its root, set the repository Actions variable `NUXT_APP_BASE_URL` to `/`.

@@ -581,7 +581,7 @@ html {
   }
 }
 
-/* Memory, knowledge graph, and personalization */
+/* Memory and personalization */
 .memory-section {
   position: relative;
   color: var(--ink);
@@ -2245,7 +2245,7 @@ main {
     padding: 20px;
   }
 }
-/* Connected memory */
+/* Memory documents */
 .memory-section {
   padding: 100px max(6%, calc((100vw - 1410px) / 2)) 110px;
   background-color: #1b1114;
@@ -2310,115 +2310,194 @@ main {
   font-size: 14px;
   line-height: 1.65;
 }
-.memory-map-card {
+.memory-docs-card {
   grid-row: span 2;
   display: flex;
   flex-direction: column;
   background:
     radial-gradient(circle at 50% 70%, #77313638, transparent 53%), #11181c;
 }
-.knowledge-map {
-  position: relative;
-  width: 100%;
-  height: 315px;
+.memory-doc {
+  display: flex;
   flex: 1 0 315px;
+  flex-direction: column;
+  width: 100%;
+  min-height: 315px;
   margin: 22px 0 14px;
   border: 1px solid #354147;
   border-radius: 9px;
   background:
-    radial-gradient(circle at 50% 50%, #6d30303d, transparent 47%),
-    radial-gradient(#46515955 1px, transparent 1px), #11171a;
-  background-size:
-    auto,
-    22px 22px,
-    auto;
+    radial-gradient(circle at 30% 60%, #6d30302e, transparent 52%), #11171a;
   overflow: hidden;
 }
-.map-label {
-  position: absolute;
-  z-index: 2;
-  top: 13px;
-  left: 16px;
+.memory-doc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #2c363b;
+  background: #151d21;
+}
+.memory-doc-path {
   display: flex;
   align-items: center;
   gap: 7px;
+  min-width: 0;
   color: #91a0a8;
-  font: 9px var(--mono);
-  letter-spacing: 0.13em;
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.map-label svg {
+.memory-doc-path svg {
+  flex: none;
   color: var(--accent);
 }
-.knowledge-lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: #b05a58;
-  stroke-width: 1.3;
-  opacity: 0.8;
+.memory-doc-path strong {
+  color: #e3e9ec;
+  font-weight: 500;
 }
-.knowledge-lines circle {
-  fill: #ff6963;
-  stroke: none;
-}
-.map-node {
-  position: absolute;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 27px auto;
-  column-gap: 7px;
+.memory-doc-rev {
+  display: flex;
+  flex: none;
   align-items: center;
-  min-width: 100px;
-  padding: 9px 11px;
-  border: 1px solid #536069;
+  gap: 5px;
+  padding: 4px 7px;
+  border: 1px solid #74433e;
+  border-radius: 4px;
+  color: #ff8a82;
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+.memory-doc-body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) 150px;
+}
+.memory-doc-text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 18px 18px 16px;
+  font: 11.5px/1.5 var(--mono);
+}
+.memory-doc-change {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: auto;
+  padding: 11px 12px;
+  border: 1px solid #2f3a40;
   border-radius: 7px;
-  background: #1d272c;
-  box-shadow: 0 8px 25px #0008;
-  transform: translate(-50%, -50%);
+  background: #151d21;
+  font: 10px var(--mono);
 }
-.map-node > span {
-  grid-row: span 2;
-  color: #ff7e75;
+.change-count b {
+  color: #79c7a3;
+  font-weight: 500;
 }
-.map-node strong {
-  color: #ecf1f3;
-  font-size: 11px;
+.change-count i {
+  color: #e08480;
+  font-style: normal;
+}
+.change-source {
+  flex: 1;
+  min-width: 0;
+  color: #91a0a8;
+}
+.change-restore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid #3b474d;
+  border-radius: 4px;
+  color: #d4dde1;
+}
+.memory-card .memory-doc-text p {
+  max-width: none;
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #b8c3c9;
+  font: inherit;
+  line-height: inherit;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.map-node small {
-  margin-top: 3px;
-  color: #83919a;
+.memory-card .memory-doc-text .md-h1 {
+  margin-bottom: 6px;
+  color: #f1f4f5;
+  font-size: 14px;
+}
+.memory-card .memory-doc-text .md-h2 {
+  margin-top: 10px;
+  color: #ff8a82;
+}
+.memory-card .memory-doc-text .md-removed {
+  color: #d58b88;
+  background: #5a24263d;
+  text-decoration: line-through;
+  text-decoration-color: #d58b8899;
+}
+.memory-card .memory-doc-text .md-added {
+  color: #9fe0bb;
+  background: #1f4a3340;
+}
+.memory-doc-history {
+  margin: 0;
+  padding: 16px 14px;
+  border-left: 1px solid #2c363b;
+  list-style: none;
+}
+.memory-doc-history li {
+  position: relative;
+  display: grid;
+  padding: 0 0 14px 16px;
+}
+.memory-doc-history li::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #5c6970;
+  border-radius: 50%;
+  background: #11171a;
+}
+.memory-doc-history li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 13px;
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  background: #34404a;
+}
+.memory-doc-history li.current::before {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 10px #ff575288;
+}
+.memory-doc-history span {
+  color: #7f8d95;
   font: 8px var(--mono);
-  letter-spacing: 0.07em;
+  letter-spacing: 0.12em;
 }
-.map-center {
-  top: 50%;
-  left: 50%;
-  min-width: 143px;
-  padding: 12px 14px;
-  border-color: #dc5e57;
-  background: #452728;
-  box-shadow:
-    0 0 30px #ff575233,
-    0 10px 25px #0009;
+.memory-doc-history strong {
+  margin-top: 3px;
+  color: #e3e9ec;
+  font-size: 11px;
 }
-.map-person {
-  top: 26%;
-  left: 19%;
-}
-.map-date {
-  top: 24%;
-  left: 82%;
-}
-.map-feedback {
-  top: 77%;
-  left: 18%;
-}
-.map-preference {
-  top: 75%;
-  left: 82%;
+.memory-doc-history small {
+  margin-top: 2px;
+  color: #83919a;
+  font-size: 10px;
 }
 .memory-card-foot {
   display: flex;
@@ -2561,7 +2640,7 @@ main {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
-  .memory-map-card {
+  .memory-docs-card {
     grid-row: auto;
   }
   .memory-recall-card,
@@ -2588,41 +2667,38 @@ main {
   .memory-grid {
     gap: 12px;
   }
-  .knowledge-map {
-    flex-basis: 290px;
-    height: 290px;
+  .memory-doc {
+    min-height: 0;
+    flex-basis: auto;
     margin-top: 23px;
   }
-  .map-node {
-    min-width: 0;
-    grid-template-columns: 1fr;
-    gap: 3px;
-    padding: 7px;
-    text-align: center;
+  .memory-doc-body {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .map-node > span {
-    grid-row: auto;
+  .memory-doc-text {
+    padding: 14px 10px;
+    font-size: 10.5px;
+  }
+  .memory-doc-change {
+    margin-top: 12px;
+  }
+  .change-source {
+    flex-basis: 60%;
+  }
+  .memory-doc-history {
+    display: flex;
+    gap: 14px;
+    padding: 12px 14px;
+    border-top: 1px solid #2c363b;
+    border-left: 0;
+    overflow: hidden;
+  }
+  .memory-doc-history li {
+    flex: none;
+    padding-bottom: 0;
+  }
+  .memory-doc-history li:not(:last-child)::after,
+  .memory-doc-history li:nth-child(n + 4) {
     display: none;
-  }
-  .map-node strong {
-    font-size: 9px;
-  }
-  .map-node small {
-    font-size: 7px;
-  }
-  .map-center {
-    min-width: 105px;
-  }
-  .map-person {
-    left: 20%;
-  }
-  .map-date {
-    left: 80%;
-  }
-  .map-feedback {
-    left: 20%;
-  }
-  .map-preference {
-    left: 80%;
   }
 }

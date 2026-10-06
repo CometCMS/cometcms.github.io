@@ -21,10 +21,10 @@ import {
   EyeOff,
   FileText,
   FolderOpen,
+  History,
   ListFilter,
   Menu,
   Mic2,
-  Network,
   Palette,
   PanelTopOpen,
   Search,
@@ -113,7 +113,7 @@ function closeMenu() {
       <a href="https://cynosure-ai.github.io/docs/" target="_blank" rel="noreferrer">Documentation
         <span>↗</span></a>
     </nav>
-    <a class="nav-cta" href="https://github.com/Cynosure-AI/cynosure-ai.github.io/releases">Download
+    <a class="nav-cta" href="https://github.com/Cynosure-AI/cynosure-app/releases">Download
       <ArrowDown :size="14" />
     </a>
     <button class="menu-button" type="button" aria-label="Toggle navigation" :aria-expanded="menuOpen"
@@ -130,7 +130,7 @@ function closeMenu() {
         <h1>Your models.<br />Your tools. <br/><em>Your AI.</em></h1>
         <p class="hero-lede">Ask Cynosure to research ideas, recall project details, draft follow-ups, and organize files. Your models, tools, memory, agents, and automations work together in one place.</p>
         <div class="hero-actions">
-          <a class="button primary" href="https://github.com/Cynosure-AI/cynosure-ai.github.io/releases"><span>Download
+          <a class="button primary" href="https://github.com/Cynosure-AI/cynosure-app/releases"><span>Download
               for {{ currentPlatform }}</span>
             <ArrowDown :size="17" />
           </a>
@@ -189,55 +189,71 @@ function closeMenu() {
     </section>
 
     <section class="memory-section" id="memory">
-      <div class="section-kicker reveal">Memory + knowledge graph</div>
+      <div class="section-kicker reveal">Memory you own</div>
       <div class="memory-heading reveal">
         <h2>A memory that grows<br /><em>with your work.</em></h2>
-        <p>Cynosure turns useful details from your conversations into connected knowledge. It remembers your projects, preferences, and people, then brings the right context back when you need it.</p>
+        <p>Cynosure keeps what it learns as plain Markdown documents in folders you control. It brings back the right passages when you need them, and every change is versioned so you can review or undo it.</p>
       </div>
       <div class="memory-grid">
-        <article class="memory-card memory-map-card reveal">
+        <article class="memory-card memory-docs-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">FACTS + CONNECTIONS</span>
-            <h3>See how everything connects.</h3>
-            <p>Useful facts become part of a knowledge graph that links people, projects, decisions, preferences, and skills. Explore and edit what Cynosure remembers.</p>
+            <span class="feature-overline">DOCUMENTS + REVISIONS</span>
+            <h3>Memory you can read and edit.</h3>
+            <p>Memories are Markdown files organized in folders, so you can open them, edit them, or drop in your own notes. Every change is saved as a revision with a diff that shows where it came from: you, a chat, or Dreaming Mode. Folders also decide which agents can see what.</p>
           </div>
-          <div class="knowledge-map" role="img" aria-label="Illustration of a project linked to a person, launch date, feedback, and communication preference">
-            <div class="map-label"><Network :size="14" /> KNOWLEDGE GRAPH</div>
-            <svg class="knowledge-lines" viewBox="0 0 600 290" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M300 145 L113 76 M300 145 L491 69 M300 145 L105 223 M300 145 L495 218" />
-              <circle cx="300" cy="145" r="4" /><circle cx="113" cy="76" r="3" /><circle cx="491" cy="69" r="3" /><circle cx="105" cy="223" r="3" /><circle cx="495" cy="218" r="3" />
-            </svg>
-            <div class="map-node map-center"><span><Network :size="19" /></span><strong>Project Atlas</strong><small>PROJECT</small></div>
-            <div class="map-node map-person"><span><Bot :size="17" /></span><strong>Maya</strong><small>TEAM</small></div>
-            <div class="map-node map-date"><span><CalendarClock :size="17" /></span><strong>Launch plan</strong><small>MILESTONE</small></div>
-            <div class="map-node map-feedback"><span><MessageCircle :size="17" /></span><strong>Customer feedback</strong><small>RESEARCH</small></div>
-            <div class="map-node map-preference"><span><Sparkles :size="17" /></span><strong>Concise updates</strong><small>PREFERENCE</small></div>
+          <div class="memory-doc" role="img" aria-label="Illustration of a Markdown memory document with an inline change and its revision history">
+            <div class="memory-doc-head">
+              <span class="memory-doc-path"><FolderOpen :size="14" /> Projects / Atlas / <strong>launch-plan.md</strong></span>
+              <span class="memory-doc-rev"><History :size="12" /> REV 4</span>
+            </div>
+            <div class="memory-doc-body">
+              <div class="memory-doc-text">
+                <p class="md-h1"># Launch plan</p>
+                <p class="md-h2">## Timeline</p>
+                <p class="md-line md-removed">- Public beta: October 14</p>
+                <p class="md-line md-added">- Public beta: October 28, after customer feedback</p>
+                <p class="md-line">- Owner: Maya</p>
+                <p class="md-h2">## Preferences</p>
+                <p class="md-line">- Keep status updates concise</p>
+                <div class="memory-doc-change">
+                  <span class="change-count"><b>+1</b> <i>−1</i></span>
+                  <span class="change-source">Updated by Dreaming from “Atlas sync”</span>
+                  <span class="change-restore"><History :size="12" /> Restore REV 3</span>
+                </div>
+              </div>
+              <ol class="memory-doc-history">
+                <li class="current"><span>REV 4</span><strong>Dreaming</strong><small>2h ago</small></li>
+                <li><span>REV 3</span><strong>You</strong><small>Yesterday</small></li>
+                <li><span>REV 2</span><strong>Chat</strong><small>Monday</small></li>
+                <li><span>REV 1</span><strong>Imported</strong><small>Sep 30</small></li>
+              </ol>
+            </div>
           </div>
-          <div class="memory-card-foot"><span>People</span><span>Projects</span><span>Facts</span><span>Preferences</span></div>
+          <div class="memory-card-foot"><span>Markdown files</span><span>Folders</span><span>Revisions</span><span>Restore</span></div>
         </article>
         <article class="memory-card memory-recall-card reveal">
           <div class="memory-card-copy">
             <span class="feature-overline">FOCUSED RECALL</span>
             <h3>The right detail, right on time.</h3>
-            <p>When you ask, Cynosure searches related memories, ranks what matters, and adds a focused summary to the conversation.</p>
+            <p>When you ask, Cynosure searches your memory folders by meaning and keywords, ranks the matches, and adds only the passages that support your question, with a link back to the source.</p>
           </div>
           <div class="recall-preview" aria-hidden="true">
-            <div class="recall-question"><Search :size="16" /><span>What changed on Project Atlas?</span></div>
-            <div class="recall-result"><span><CircleCheck :size="14" /> RELATED MEMORY</span><strong>Launch plan updated after customer feedback</strong><small>Connected to Project Atlas · Research</small></div>
+            <div class="recall-question"><Search :size="16" /><span>When does the Atlas beta go live?</span></div>
+            <div class="recall-result"><span><CircleCheck :size="14" /> RELATED MEMORY</span><strong>Public beta: October 28, after customer feedback</strong><small>From Projects / Atlas / launch-plan.md · Timeline</small></div>
           </div>
         </article>
         <article class="memory-card memory-dream-card reveal">
           <div class="memory-card-copy">
             <span class="feature-overline">DREAMING MODE</span>
             <h3>Learning continues in the background.</h3>
-            <p>While you're away, Cynosure revisits conversations to extract missed facts, connect related ideas, and keep its knowledge useful.</p>
+            <p>While you're away, Cynosure reviews recent conversations for lasting facts, decisions, and preferences, then updates the matching documents instead of piling up duplicates.</p>
           </div>
           <div class="dream-preview" aria-hidden="true">
             <div class="dream-preview-head"><BrainCircuit :size="23" /><span><strong>Dreaming Mode</strong><small>Reflecting on past conversations</small></span></div>
             <div class="dream-steps">
               <div class="dream-step"><span class="dream-step-icon"><MessageCircle :size="19" /></span><span>Review<br />conversations</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><FileText :size="19" /></span><span>Extract<br />new facts</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><Network :size="19" /></span><span>Connect<br />related ideas</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><Sparkles :size="19" /></span><span>Find lasting<br />facts</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><FileText :size="19" /></span><span>Update<br />documents</span></div>
             </div>
           </div>
         </article>
@@ -294,7 +310,7 @@ function closeMenu() {
         <article>
           <BrainCircuit :size="21" /><span>05 / MEMORY &amp; KNOWLEDGE</span>
           <h3>Find what you already know.</h3>
-          <ul><li>Search across chats, files, notes, and documents.</li><li>Connect related knowledge and summarize it when you need it.</li></ul>
+          <ul><li>Search across chats, files, notes, and documents.</li><li>Pull related notes together and summarize them when you need it.</li></ul>
           <p class="use-case-tools">Memory · Obsidian · Notes</p>
         </article>
 
@@ -315,7 +331,7 @@ function closeMenu() {
           <h2>Your AI, ready<br /><em>for real work.</em></h2>
           <p>Connect a model, add the tools and memory it needs, and put your ideas to work in one private workspace.</p>
           <div class="hero-actions"><a class="button primary platform-download"
-              href="https://github.com/Cynosure-AI/cynosure-ai.github.io/releases"><span>Download for {{ currentPlatform
+              href="https://github.com/Cynosure-AI/cynosure-app/releases"><span>Download for {{ currentPlatform
                 }}</span>
               <ArrowDown :size="17" />
             </a></div>
@@ -330,7 +346,7 @@ function closeMenu() {
           <div class="download-alternates">
             <span>Also available for</span>
             <a v-for="platform in alternatePlatforms" :key="platform"
-              href="https://github.com/Cynosure-AI/cynosure-ai.github.io/releases">{{ platform }}</a>
+              href="https://github.com/Cynosure-AI/cynosure-app/releases">{{ platform }}</a>
           </div>
           <small>Free to use · No tracking · Your data stays yours</small>
         </div>
@@ -341,7 +357,7 @@ function closeMenu() {
   <footer><a class="brand" href="#top"><img :src="`${assetBase}logo.png`" alt="" /><span>CYNOSURE</span></a>
     <p>© 2026 Cynosure. Free to use</p>
     <div><a href="https://cynosure-ai.github.io/docs/">Documentation</a><a
-        href="https://github.com/Cynosure-AI/cynosure-ai.github.io/releases">Releases</a><a
-        href="https://github.com/andreasjhagen/Cynosure/issues">Support</a></div>
+        href="https://github.com/Cynosure-AI/cynosure-app/releases">Releases</a><a
+        href="https://github.com/Cynosure-AI/cynosure-app/issues">Support</a></div>
   </footer>
 </template>
