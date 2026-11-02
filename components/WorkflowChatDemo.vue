@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ArrowRight, Bot, Check, FileText, FolderOpen, Mail, RotateCcw, Search, Sparkles } from '@lucide/vue'
+import { ArrowRight, Bot, Check, Database, FileText, Globe, LayoutTemplate, PenLine, Search, Sparkles } from '@lucide/vue'
 
 const assetBase = useRuntimeConfig().app.baseURL
 
-type ToolKind = 'memory' | 'files' | 'mail' | 'web'
+type ToolKind = 'read' | 'schema' | 'entry' | 'layout'
 
 const workflows: {
   label: string
@@ -11,51 +11,52 @@ const workflows: {
   prompt: string
   tools: { kind: ToolKind; name: string; detail: string }[]
   reply: string
-  outputs: { kind: 'mail' | 'file' | 'folder'; name: string; detail: string }[]
+  outputs: { kind: 'page' | 'type' | 'entry'; name: string; detail: string }[]
 }[] = [
   {
-    label: 'Follow up',
-    title: 'A follow-up, already prepared',
-    prompt: 'Catch me up on Project Atlas, draft a follow-up to Maya, and save a brief with the project files.',
+    label: 'New section',
+    title: 'A new section, modeled and published',
+    prompt: 'Add events to the Northstar site: a content type with date, location and capacity, two sample events, and a listing page at /events.',
     tools: [
-      { kind: 'memory', name: 'Search memory', detail: 'Project Atlas · Maya' },
-      { kind: 'files', name: 'Find project files', detail: '/Projects/Atlas' },
-      { kind: 'mail', name: 'Draft email', detail: 'Follow-up to Maya' },
-      { kind: 'files', name: 'Save brief', detail: 'atlas-brief.md' },
+      { kind: 'read', name: 'list_content_types', detail: 'northstar-studio' },
+      { kind: 'schema', name: 'create_content_type', detail: 'Events · 4 fields' },
+      { kind: 'entry', name: 'create_entry', detail: 'Summer Open Studio' },
+      { kind: 'entry', name: 'create_entry', detail: 'Design Talk Night' },
+      { kind: 'layout', name: 'set_layout', detail: 'Events template' },
     ],
-    reply: 'Done. I found the latest launch decisions and Maya’s preference for concise updates. Your follow-up is drafted, and the project brief is saved with the Atlas files.',
+    reply: 'Done. Events has date, location, capacity and registration fields, two published sample events, and a template that lists upcoming events at /events.',
     outputs: [
-      { kind: 'mail', name: 'Follow-up to Maya', detail: 'Email draft' },
-      { kind: 'file', name: 'atlas-brief.md', detail: 'Saved to /Projects/Atlas' },
+      { kind: 'page', name: '/events', detail: 'Listing page · published' },
+      { kind: 'type', name: 'Events', detail: 'Content type · 4 fields' },
     ],
   },
   {
-    label: 'Research',
-    title: 'Research that connects the dots',
-    prompt: 'Review the latest customer feedback for Project Atlas. What are the three themes I should bring to our planning meeting?',
+    label: 'Translate',
+    title: 'A second language, same design',
+    prompt: 'Translate the About page into German. Keep the layout exactly as it is.',
     tools: [
-      { kind: 'memory', name: 'Recall project context', detail: 'Project Atlas' },
-      { kind: 'files', name: 'Read feedback notes', detail: '18 related files' },
-      { kind: 'web', name: 'Compare findings', detail: 'Recent research' },
+      { kind: 'read', name: 'get_entry', detail: 'pages / about' },
+      { kind: 'read', name: 'get_layout', detail: 'Shared page template' },
+      { kind: 'entry', name: 'update_entry', detail: 'locale: de · 6 fields' },
     ],
-    reply: 'Three themes stand out: faster onboarding, clearer progress updates, and simpler sharing. I pulled the supporting notes into a short brief for your meeting.',
+    reply: 'The German About page is ready and uses the shared template unchanged. Language links and the sitemap pick it up automatically.',
     outputs: [
-      { kind: 'file', name: 'feedback-themes.md', detail: 'Research brief' },
+      { kind: 'page', name: '/de/about', detail: 'German · published' },
     ],
   },
   {
-    label: 'Organize files',
-    title: 'The busywork, taken care of',
-    prompt: 'Sort the loose launch assets into design, copy, and research folders. Let me know where everything went.',
+    label: 'Edit a page',
+    title: 'A quick edit, nothing else touched',
+    prompt: 'On the landing page, announce that we are booking projects for spring and add a button to the contact page.',
     tools: [
-      { kind: 'files', name: 'Scan launch assets', detail: '12 unsorted files' },
-      { kind: 'files', name: 'Create folders', detail: 'Design · Copy · Research' },
-      { kind: 'files', name: 'Organize files', detail: '12 files moved' },
+      { kind: 'read', name: 'get_section', detail: 'Landing page · Hero' },
+      { kind: 'layout', name: 'update_element', detail: 'Heading · text' },
+      { kind: 'layout', name: 'update_section', detail: 'Button → /contact' },
     ],
-    reply: 'All 12 launch assets are organized. Design has 5 files, Copy has 4, and Research has 3. I saved a move log so you can review the changes.',
+    reply: 'Updated. The hero now announces spring bookings, and a “Get in touch” button links to the contact page. Only the landing page changed; the shared template is untouched.',
     outputs: [
-      { kind: 'folder', name: 'Launch assets', detail: '3 organized folders' },
-      { kind: 'file', name: 'move-log.md', detail: 'Changes recorded' },
+      { kind: 'entry', name: 'Landing page', detail: 'Hero updated' },
+      { kind: 'page', name: '/contact', detail: 'Linked from the hero' },
     ],
   },
 ]
@@ -229,9 +230,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="root" class="workflow-demo" aria-label="Illustrated Cynosure task conversation">
+  <div ref="root" class="workflow-demo" aria-label="Illustrated conversation with an agent managing CometCMS over MCP">
     <div class="workflow-demo-top">
-      <div class="workflow-demo-identity"><span class="workflow-demo-logo"><img :src="`${assetBase}logo.png`" alt="" /></span><span><strong>Cynosure</strong><small>Working across your tools</small></span></div>
+      <div class="workflow-demo-identity"><span class="workflow-demo-logo"><img :src="`${assetBase}logo.png`" alt="" /></span><span><strong>CometCMS MCP</strong><small>Connected to northstar-studio</small></span></div>
     </div>
 
     <div class="workflow-demo-tabs" aria-label="Example workflows">
@@ -242,15 +243,15 @@ onBeforeUnmount(() => {
       <div class="workflow-demo-content" :class="{ switching: isSwitching }">
       <div class="workflow-demo-caption"><span class="workflow-live-dot"></span> LIVE WORKFLOW <span class="workflow-demo-number">0{{ selected + 1 }} / 0{{ workflows.length }}</span></div>
       <h3>{{ current.title }}</h3>
-      <div class="workflow-message user-message"><span class="workflow-avatar user-avatar">YOU</span><div class="workflow-message-content"><span class="workflow-message-name">You</span><p>{{ promptText }}<span v-if="phase === 'prompt'" class="workflow-cursor" aria-hidden="true"></span><span v-if="phase === 'waiting'" class="workflow-placeholder">Ask Cynosure to handle a task…</span></p></div></div>
+      <div class="workflow-message user-message"><span class="workflow-avatar user-avatar">YOU</span><div class="workflow-message-content"><span class="workflow-message-name">You</span><p>{{ promptText }}<span v-if="phase === 'prompt'" class="workflow-cursor" aria-hidden="true"></span><span v-if="phase === 'waiting'" class="workflow-placeholder">Ask your agent to change the site…</span></p></div></div>
 
-      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="shownTools" class="workflow-section"><div class="workflow-tool-list"><div v-for="tool in current.tools.slice(0, shownTools)" :key="tool.name" class="workflow-tool"><span class="workflow-tool-icon"><Search v-if="tool.kind === 'memory' || tool.kind === 'web'" :size="14" /><Mail v-else-if="tool.kind === 'mail'" :size="14" /><FolderOpen v-else :size="14" /></span><span class="workflow-tool-name">{{ tool.name }}</span><span class="workflow-tool-detail">{{ tool.detail }}</span><Check class="workflow-tool-check" :size="14" /></div></div></div></Transition>
+      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="shownTools" class="workflow-section"><div class="workflow-tool-list"><div v-for="(tool, index) in current.tools.slice(0, shownTools)" :key="index" class="workflow-tool"><span class="workflow-tool-icon"><Search v-if="tool.kind === 'read'" :size="14" /><Database v-else-if="tool.kind === 'schema'" :size="14" /><PenLine v-else-if="tool.kind === 'entry'" :size="14" /><LayoutTemplate v-else :size="14" /></span><span class="workflow-tool-name">{{ tool.name }}</span><span class="workflow-tool-detail">{{ tool.detail }}</span><Check class="workflow-tool-check" :size="14" /></div></div></div></Transition>
 
-      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="phase === 'reply' || phase === 'done'" class="workflow-section"><div class="workflow-message assistant-message"><span class="workflow-avatar assistant-avatar"><Bot :size="17" /></span><div class="workflow-message-content"><span class="workflow-message-name">Cynosure <Sparkles :size="12" /></span><p>{{ replyText }}<span v-if="phase === 'reply'" class="workflow-cursor" aria-hidden="true"></span></p></div></div></div></Transition>
+      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="phase === 'reply' || phase === 'done'" class="workflow-section"><div class="workflow-message assistant-message"><span class="workflow-avatar assistant-avatar"><Bot :size="17" /></span><div class="workflow-message-content"><span class="workflow-message-name">Agent <Sparkles :size="12" /></span><p>{{ replyText }}<span v-if="phase === 'reply'" class="workflow-cursor" aria-hidden="true"></span></p></div></div></div></Transition>
 
-      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="showOutputs" class="workflow-section"><div class="workflow-outputs"><div v-for="output in current.outputs" :key="output.name" class="workflow-output"><span class="workflow-output-icon"><Mail v-if="output.kind === 'mail'" :size="18" /><FolderOpen v-else-if="output.kind === 'folder'" :size="18" /><FileText v-else :size="18" /></span><span><strong>{{ output.name }}</strong><small>{{ output.detail }}</small></span><ArrowRight :size="15" /></div></div></div></Transition>
+      <Transition name="workflow-section" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave"><div v-if="showOutputs" class="workflow-section"><div class="workflow-outputs"><div v-for="output in current.outputs" :key="output.name" class="workflow-output"><span class="workflow-output-icon"><Globe v-if="output.kind === 'page'" :size="18" /><Database v-else-if="output.kind === 'type'" :size="18" /><FileText v-else :size="18" /></span><span><strong>{{ output.name }}</strong><small>{{ output.detail }}</small></span><ArrowRight :size="15" /></div></div></div></Transition>
       </div>
     </div>
-    <div class="workflow-demo-bottom"><span><Check :size="13" /> Tasks, tools, and results in one conversation</span><span>ILLUSTRATIVE DEMO</span></div>
+    <div class="workflow-demo-bottom"><span><Check :size="13" /> Content, layouts, and publishing over MCP</span><span>ILLUSTRATIVE DEMO</span></div>
   </div>
 </template>

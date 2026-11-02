@@ -1,70 +1,78 @@
 <script setup lang="ts">
 import {
-  ArrowDownUp,
   ArrowDown,
   ArrowUpRight,
-  Bot,
-  Box,
-  CalendarClock,
+  Blocks,
+  BriefcaseBusiness,
+  CalendarDays,
   CircleCheck,
-  Clock3,
+  CloudSun,
+  Code2,
+  Construction,
   Database,
-  MessageCircle,
-  Monitor,
-  Plus,
-  Send,
-  Settings2,
-  BarChart3,
-  BrainCircuit,
-  Check,
   DatabaseBackup,
-  EyeOff,
-  FileText,
+  FileJson,
   FolderOpen,
-  History,
-  ListFilter,
+  Globe,
+  Inbox,
+  KeyRound,
+  Languages,
+  Layers,
+  LayoutTemplate,
+  Link2,
+  ListTree,
   Menu,
-  Mic2,
+  Newspaper,
   Palette,
-  PanelTopOpen,
   Search,
-  ShieldCheck,
-  Sparkles,
+  Server,
+  ToggleRight,
+  Upload,
+  Users,
+  Webhook,
   X,
 } from '@lucide/vue'
 
-const downloadPlatforms = ['Windows', 'macOS', 'Linux'] as const
-type DownloadPlatform = typeof downloadPlatforms[number]
 const assetBase = useRuntimeConfig().app.baseURL
+const links = {
+  download: 'https://github.com/CometCMS/CometCMS/releases/latest',
+  releases: 'https://github.com/CometCMS/CometCMS/releases',
+  source: 'https://github.com/CometCMS/CometCMS',
+  issues: 'https://github.com/CometCMS/CometCMS/issues',
+  docs: 'https://cometcms.github.io/CometCMS/',
+  extensionsGuide: 'https://cometcms.github.io/CometCMS/guide/extensions',
+  extensionExamples: 'https://github.com/CometCMS/CometCMS/tree/main/examples/extensions',
+}
 
 const menuOpen = ref(false)
-const currentPlatform = ref<DownloadPlatform>('Windows')
-const alternatePlatforms = computed(() => downloadPlatforms.filter(platform => platform !== currentPlatform.value))
-const featuredServices = [
-  { name: 'Filesystem', description: 'Read, write and search local files.', category: 'Local files', icon: '' },
-  { name: 'Gmail', description: 'Search and manage your email.', category: 'Email', icon: 'gmail-icon.svg' },
-  { name: 'Obsidian', description: 'Connect your notes and knowledge.', category: 'Knowledge', icon: 'obsidian-icon.svg' },
-  { name: 'GitHub', description: 'Work with issues, repos and pull requests.', category: 'Development', icon: 'github-icon.svg' },
-  { name: 'Google Drive', description: 'Access and manage your files.', category: 'Cloud files', icon: 'google-drive-color-icon.svg' },
-  { name: 'Slack', description: 'Read and send messages.', category: 'Messaging', icon: 'slack-icon.svg' },
-  { name: 'YouTube', description: 'Search and transcribe videos.', category: 'Media', icon: 'youtube-color-icon.svg' },
-  { name: 'Discord', description: 'Connect with your communities.', category: 'Messaging', icon: 'discord-color-icon.svg' },
-  { name: 'Canva', description: 'Find and manage your designs.', category: 'Design', icon: 'canva-icon.svg' },
+const featuredExtensions = [
+  { name: 'Comet Essentials', description: 'Testimonials, pricing, maps, slideshows, stats and more.', category: 'Blocks', version: '1.8.1', icon: Blocks },
+  { name: 'Comet ThemePack', description: 'Neo-Brutalism, Industrial, Material and Orbital presets.', category: 'Themes', version: '2.0.0', icon: Palette },
+  { name: 'Portfolio', description: 'Project case studies with a field-bound template.', category: 'Content type', version: '1.1.0', icon: BriefcaseBusiness },
+  { name: 'Menu Variations', description: 'Pills, tabs, cards and sidebars from your menus.', category: 'Navigation', version: '1.1.0', icon: ListTree },
+  { name: 'Fancy Containers', description: 'Geometric forms, soft lights and deep-space skies.', category: 'Layout', version: '1.1.0', icon: Layers },
+  { name: 'Weather', description: 'Current weather for a place, via Open-Meteo.', category: 'Data', version: '2.0.0', icon: CloudSun },
 ] as const
+const apiSample = `{ "data": [
+  { "title": "Sommer-Atelier",
+    "date": "2026-06-12",
+    "location": "Studio Nord" },
+  … ],
+  "meta": { "total": 2 } }`
 let revealObserver: IntersectionObserver | undefined
 
 useSeoMeta({
-  title: 'Cynosure — Your AI, in one place',
-  description: 'Cynosure is a private AI workspace for agents, durable memory, tools, media, and automations.',
-  ogTitle: 'Cynosure — Your AI, in one place',
-  ogDescription: 'A private AI workspace for agents, durable memory, tools, media, and automations.',
+  title: 'CometCMS — The CMS that fits on any PHP host',
+  description: 'CometCMS is a visual page builder and content CMS in a single PHP folder. No database, no Composer, no Node on the server.',
+  ogTitle: 'CometCMS — The CMS that fits on any PHP host',
+  ogDescription: 'Visual pages, structured content, a headless API and MCP. Upload a ZIP, open /admin, and start building.',
   ogType: 'website',
 })
 
 useHead({
   htmlAttrs: { lang: 'en' },
   link: [
-    { rel: 'icon', href: `${assetBase}logo.png` },
+    { rel: 'icon', href: `${assetBase}favicon.ico` },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
     {
@@ -72,14 +80,10 @@ useHead({
       href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap',
     },
   ],
-  meta: [{ name: 'theme-color', content: '#070b0f' }],
+  meta: [{ name: 'theme-color', content: '#060a12' }],
 })
 
 onMounted(() => {
-  const userAgent = navigator.userAgent.toLowerCase()
-  if (userAgent.includes('mac')) currentPlatform.value = 'macOS'
-  else if (userAgent.includes('linux')) currentPlatform.value = 'Linux'
-
   revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -102,18 +106,18 @@ function closeMenu() {
 <template>
   <div class="grain" aria-hidden="true"></div>
   <header class="site-header" :class="{ open: menuOpen }">
-    <a class="brand" href="#top" aria-label="Cynosure home">
+    <a class="brand" href="#top" aria-label="CometCMS home">
       <img :src="`${assetBase}logo.png`" alt="" />
-      <span>CYNOSURE</span>
+      <span>COMET<b>CMS</b></span>
     </a>
     <nav aria-label="Main navigation">
-      <a href="#features" @click="closeMenu">Capabilities</a>
+      <a href="#features" @click="closeMenu">Features</a>
+      <a href="#extensions" @click="closeMenu">Extensions</a>
       <a href="#use-cases" @click="closeMenu">Use Cases</a>
-      <a href="#download" @click="closeMenu">Download</a>
-      <a href="https://cynosure-ai.github.io/docs/" target="_blank" rel="noreferrer">Documentation
+      <a :href="links.docs" target="_blank" rel="noreferrer">Documentation
         <span>↗</span></a>
     </nav>
-    <a class="nav-cta" href="https://github.com/Cynosure-AI/cynosure-app/releases">Download
+    <a class="nav-cta" :href="links.download">Download
       <ArrowDown :size="14" />
     </a>
     <button class="menu-button" type="button" aria-label="Toggle navigation" :aria-expanded="menuOpen"
@@ -126,147 +130,139 @@ function closeMenu() {
   <main id="top">
     <section class="hero">
       <div class="hero-copy reveal">
-        <div class="eyebrow"><span></span> The AI workspace that remembers</div>
-        <h1>Your models.<br />Your tools. <br/><em>Your AI.</em></h1>
-        <p class="hero-lede">Ask Cynosure to research ideas, recall project details, draft follow-ups, and organize files. Your models, tools, memory, agents, and automations work together in one place.</p>
+        <div class="eyebrow"><span></span> The CMS that fits on any PHP host</div>
+        <h1>Your pages.<br />Your content. <br/><em>Your server.</em></h1>
+        <p class="hero-lede">CometCMS is a visual page builder and content CMS in a single PHP folder. No database, no Composer, no Node on the server. Upload it to any shared host, open /admin, and start building.</p>
         <div class="hero-actions">
-          <a class="button primary" href="https://github.com/Cynosure-AI/cynosure-app/releases"><span>Download
-              for {{ currentPlatform }}</span>
+          <a class="button primary" :href="links.download"><span>Download latest release</span>
             <ArrowDown :size="17" />
           </a>
-          <a class="button secondary" href="https://cynosure-ai.github.io/docs/" target="_blank"
+          <a class="button secondary" :href="links.docs" target="_blank"
             rel="noreferrer">Read the docs
             <ArrowUpRight :size="14" />
           </a>
         </div>
         <div class="hero-notes">
-          <span><Monitor :size="23" /><span>Desktop &amp; Web<small>Free to use</small></span></span>
-          <span><Database :size="23" /><span>Bring your own models<small>Or use any provider API</small></span></span>
-          <span><Box :size="23" /><span>Tools, memory, agents<small>All in one workspace</small></span></span>
+          <span><Server :size="23" /><span>PHP 8.2+<small>The only requirement</small></span></span>
+          <span><FileJson :size="23" /><span>No database<small>Content stored as JSON</small></span></span>
+          <span><LayoutTemplate :size="23" /><span>Visual &amp; headless<small>Builder, API and MCP</small></span></span>
         </div>
       </div>
 
       <div class="hero-visual reveal delay-1"><WorkflowChatDemo /></div>
     </section>
-    
+
     <section class="overview-band" id="features">
-      <div class="overview-title"><div class="section-kicker">A complete AI workspace</div><h2>Everything you need<br />to go further.</h2></div>
-      <a class="overview-card" href="#features-detail"><span class="overview-icon"><Box :size="26" /></span><div><h3>Models</h3><p>Use your own models or connect any provider API. Switch, compare, and customize for your workflow.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
-      <a class="overview-card" href="#memory"><span class="overview-icon"><Database :size="26" /></span><div><h3>Memory</h3><p>Give your AI a long-term memory. Reference past work, build context, and keep knowledge at hand.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
-      <a class="overview-card" href="#use-cases"><span class="overview-icon"><Sparkles :size="26" /></span><div><h3>Agents &amp; Tools</h3><p>Add tools, create agents, and automate repetitive work. Turn ideas into powerful workflows.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <div class="overview-title"><div class="section-kicker">A complete CMS</div><h2>All you need<br />to publish.</h2></div>
+      <a class="overview-card" href="#content"><span class="overview-icon"><LayoutTemplate :size="26" /></span><div><h3>Page Builder</h3><p>Design templates with sections, columns and field bindings. Editors fill in content while the design stays consistent.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <a class="overview-card" href="#content"><span class="overview-icon"><Database :size="26" /></span><div><h3>Structured content</h3><p>Content types with custom fields for text, media, relations and dates, saved as plain JSON files.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <a class="overview-card" href="#headless"><span class="overview-icon"><Code2 :size="26" /></span><div><h3>API &amp; MCP</h3><p>Expose a content type to any frontend, or let an AI agent manage content through the built-in MCP endpoint.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
     </section>
 
-
-
-
-
-    <section class="intro product-overview" id="features-detail">
+    <section class="intro product-overview" id="extensions">
       <div class="mcp-heading reveal">
-        <div><div class="section-kicker">MCP Directory</div><h2>Add functionality<br /><em>in a few clicks.</em></h2><p>Find and add MCP servers in Cynosure’s built-in store, powered by Smithery and the official MCP Registry. Bring a custom server whenever the directory doesn’t cover your workflow.</p></div>
-        <p>Just add a provider API key or connect a model running locally. There is little to configure before your first conversation, with models, prompts, tools, and agents ready to customize when you want more control.</p>
+        <div><div class="section-kicker">Extensions</div><h2>Add blocks<br /><em>in a few clicks.</em></h2><p>Extend the Page Builder with ZIPs of reusable blocks, content types, components, templates and theme presets. Blocks render on the server, so pages stay fast and cacheable.</p></div>
+        <p>Start with Comet Essentials for testimonials, pricing, maps, slideshows and stats, or pick a look from the ThemePack. Writing your own block takes a block.json and an HTML template, with JSON schemas and a CLI to check your work.</p>
       </div>
       <div class="mcp-stage reveal">
         <div class="mcp-steps">
-          <div><span><Search :size="28" /></span><p><strong>Discover</strong>Browse curated and official registries.</p></div>
-          <div><span><Plus :size="28" /></span><p><strong>Install</strong>Add MCP servers with one click.</p></div>
-          <div><span><Settings2 :size="28" /></span><p><strong>Configure</strong>Set API keys and permissions.</p></div>
-          <div><span><Box :size="28" /></span><p><strong>Use instantly</strong>Tools are available in chat right away.</p></div>
-          <div class="mcp-actions"><a class="button primary" href="https://cynosure-ai.github.io/docs/" target="_blank" rel="noreferrer">Explore MCP servers <ArrowUpRight :size="16" /></a><a class="button secondary" href="https://cynosure-ai.github.io/docs/" target="_blank" rel="noreferrer">Learn more <ArrowUpRight :size="16" /></a></div>
+          <div><span><Upload :size="28" /></span><p><strong>Upload</strong>Add an extension ZIP in the admin.</p></div>
+          <div><span><ToggleRight :size="28" /></span><p><strong>Review</strong>See every block and item before it installs.</p></div>
+          <div><span><Blocks :size="28" /></span><p><strong>Build</strong>New blocks appear in the Page Builder.</p></div>
+          <div><span><Palette :size="28" /></span><p><strong>Stay on theme</strong>Blocks follow your site’s colors and fonts.</p></div>
+          <div class="mcp-actions"><a class="button primary" :href="links.extensionExamples" target="_blank" rel="noreferrer">Browse extensions <ArrowUpRight :size="16" /></a><a class="button secondary" :href="links.extensionsGuide" target="_blank" rel="noreferrer">Build your own <ArrowUpRight :size="16" /></a></div>
         </div>
-        <div class="mcp-showcase" aria-label="Illustration of the Cynosure MCP directory">
-          <div class="floating-service float-github"><img :src="`${assetBase}mcp-icons/github-icon.svg`" alt="" /></div>
-          <div class="floating-service float-slack"><img :src="`${assetBase}mcp-icons/slack-icon.svg`" alt="" /></div>
-          <div class="floating-service float-drive"><img :src="`${assetBase}mcp-icons/google-drive-color-icon.svg`" alt="" /></div>
+        <div class="mcp-showcase" aria-label="Illustration of the CometCMS extension library">
+          <div class="floating-service float-github"><Blocks :size="40" /></div>
+          <div class="floating-service float-slack"><Palette :size="40" /></div>
+          <div class="floating-service float-drive"><LayoutTemplate :size="40" /></div>
           <div class="mcp-browser">
-            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> MCP STORE</span></div>
+            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> EXTENSIONS</span></div>
             <div class="mcp-browser-body">
-              <aside class="mcp-sidebar"><div class="mcp-search"><Search :size="13" /> Search MCP servers...</div><b>Recommended <small>12</small></b><span>Official <small>48</small></span><span>Smithery <small>312</small></span><em>INSTALLED</em><span>File System</span><span>Web &amp; Data</span><span>Development</span><span>System</span><span class="mcp-custom">＋ Add Custom Server</span></aside>
-              <div class="mcp-results"><div class="mcp-results-head"><div><strong>Recommended</strong><small>Handpicked MCP servers for everyday use.</small></div><span>Popular⌄</span></div><div class="mcp-result-grid"><div v-for="service in featuredServices" :key="service.name" class="mcp-result-card"><div class="mcp-result-title"><span class="mcp-result-icon"><img v-if="service.icon" :src="`${assetBase}mcp-icons/${service.icon}`" alt="" /><FolderOpen v-else :size="25" /></span><div><strong>{{ service.name }}</strong><small>{{ service.description }}</small></div></div><div class="mcp-result-foot"><span>↧ {{ service.category }}</span><span class="install-label">Install</span></div></div></div></div>
+              <aside class="mcp-sidebar"><div class="mcp-search"><Search :size="13" /> Search extensions...</div><b>Installed <small>6</small></b><span>Blocks <small>22</small></span><span>Themes <small>4</small></span><em>INCLUDES</em><span>Content types</span><span>Components</span><span>Templates</span><span>Fonts</span><span class="mcp-custom">＋ Upload ZIP</span></aside>
+              <div class="mcp-results"><div class="mcp-results-head"><div><strong>Installed</strong><small>Blocks, presets and starter content for your site.</small></div><span>Name⌄</span></div><div class="mcp-result-grid"><div v-for="extension in featuredExtensions" :key="extension.name" class="mcp-result-card"><div class="mcp-result-title"><span class="mcp-result-icon"><component :is="extension.icon" :size="24" /></span><div><strong>{{ extension.name }}</strong><small>{{ extension.description }}</small></div></div><div class="mcp-result-foot"><span>{{ extension.category }} · v{{ extension.version }}</span><span class="install-label">Enabled</span></div></div></div></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="memory-section" id="memory">
-      <div class="section-kicker reveal">Memory you own</div>
+    <section class="memory-section" id="content">
+      <div class="section-kicker reveal">Visual builder, structured content</div>
       <div class="memory-heading reveal">
-        <h2>A memory that grows<br /><em>with your work.</em></h2>
-        <p>Cynosure keeps what it learns as plain Markdown documents in folders you control. It brings back the right passages when you need them, and every change is versioned so you can review or undo it.</p>
+        <h2>Content that keeps<br /><em>its shape.</em></h2>
+        <p>Model your content with custom fields, design how it looks once, and let editors work in a clean form. Everything is saved as plain files you can read, back up and move.</p>
       </div>
       <div class="memory-grid">
         <article class="memory-card memory-docs-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">DOCUMENTS + REVISIONS</span>
-            <h3>Memory you can read and edit.</h3>
-            <p>Memories are Markdown files organized in folders, so you can open them, edit them, or drop in your own notes. Every change is saved as a revision with a diff that shows where it came from: you, a chat, or Dreaming Mode. Folders also decide which agents can see what.</p>
+            <span class="feature-overline">FILES + BACKUPS</span>
+            <h3>Content you can open in any editor.</h3>
+            <p>Every entry is a JSON file in the storage folder, so there is no database to provision, migrate or lose. Built-in backups bundle content, media and settings into one archive you can restore from the admin, and deleted entries wait in the trash.</p>
           </div>
-          <div class="memory-doc" role="img" aria-label="Illustration of a Markdown memory document with an inline change and its revision history">
+          <div class="memory-doc" role="img" aria-label="Illustration of a content entry stored as a JSON file, next to a list of backups">
             <div class="memory-doc-head">
-              <span class="memory-doc-path"><FolderOpen :size="14" /> Projects / Atlas / <strong>launch-plan.md</strong></span>
-              <span class="memory-doc-rev"><History :size="12" /> REV 4</span>
+              <span class="memory-doc-path"><FolderOpen :size="14" /> storage / pages / <strong>about.json</strong></span>
+              <span class="memory-doc-rev"><CircleCheck :size="12" /> PUBLISHED</span>
             </div>
             <div class="memory-doc-body">
               <div class="memory-doc-text">
-                <p class="md-h1"># Launch plan</p>
-                <p class="md-h2">## Timeline</p>
-                <p class="md-line md-removed">- Public beta: October 14</p>
-                <p class="md-line md-added">- Public beta: October 28, after customer feedback</p>
-                <p class="md-line">- Owner: Maya</p>
-                <p class="md-h2">## Preferences</p>
-                <p class="md-line">- Keep status updates concise</p>
-                <div class="memory-doc-change">
-                  <span class="change-count"><b>+1</b> <i>−1</i></span>
-                  <span class="change-source">Updated by Dreaming from “Atlas sync”</span>
-                  <span class="change-restore"><History :size="12" /> Restore REV 3</span>
-                </div>
+                <p class="md-line">{</p>
+                <p class="md-line md-key">"title": "About our studio",</p>
+                <p class="md-line md-key">"slug": "about",</p>
+                <p class="md-line md-key">"status": "published",</p>
+                <p class="md-line md-key">"fields": {</p>
+                <p class="md-line md-key md-nested">"tagline": "Thoughtful design for people and places",</p>
+                <p class="md-line md-key md-nested">"team_size": 6</p>
+                <p class="md-line md-key">}</p>
+                <p class="md-line">}</p>
               </div>
               <ol class="memory-doc-history">
-                <li class="current"><span>REV 4</span><strong>Dreaming</strong><small>2h ago</small></li>
-                <li><span>REV 3</span><strong>You</strong><small>Yesterday</small></li>
-                <li><span>REV 2</span><strong>Chat</strong><small>Monday</small></li>
-                <li><span>REV 1</span><strong>Imported</strong><small>Sep 30</small></li>
+                <li class="current"><span>BACKUP</span><strong>Before redesign</strong><small>2h ago</small></li>
+                <li><span>BACKUP</span><strong>Launch day</strong><small>Yesterday</small></li>
+                <li><span>BACKUP</span><strong>New events</strong><small>Monday</small></li>
+                <li><span>BACKUP</span><strong>First setup</strong><small>Oct 24</small></li>
               </ol>
             </div>
           </div>
-          <div class="memory-card-foot"><span>Markdown files</span><span>Folders</span><span>Revisions</span><span>Restore</span></div>
+          <div class="memory-card-foot"><span>JSON files</span><span>No database</span><span>Backups</span><span>Restore</span></div>
         </article>
         <article class="memory-card memory-recall-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">FOCUSED RECALL</span>
-            <h3>The right detail, right on time.</h3>
-            <p>When you ask, Cynosure searches your memory folders by meaning and keywords, ranks the matches, and adds only the passages that support your question, with a link back to the source.</p>
+            <span class="feature-overline">LOCALIZATION</span>
+            <h3>One design, every language.</h3>
+            <p>Share one design across languages, translate builder content and fields, and publish each language at its own URLs, with hreflang and sitemap entries included.</p>
           </div>
           <div class="recall-preview" aria-hidden="true">
-            <div class="recall-question"><Search :size="16" /><span>When does the Atlas beta go live?</span></div>
-            <div class="recall-result"><span><CircleCheck :size="14" /> RELATED MEMORY</span><strong>Public beta: October 28, after customer feedback</strong><small>From Projects / Atlas / launch-plan.md · Timeline</small></div>
+            <div class="recall-question"><Languages :size="16" /><span>/about → /de/about</span></div>
+            <div class="recall-result"><span><CircleCheck :size="14" /> DE · TRANSLATED</span><strong>Über unser Studio</strong><small>Same template · hreflang linked · in sitemap.xml</small></div>
           </div>
         </article>
         <article class="memory-card memory-dream-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">DREAMING MODE</span>
-            <h3>Learning continues in the background.</h3>
-            <p>While you're away, Cynosure reviews recent conversations for lasting facts, decisions, and preferences, then updates the matching documents instead of piling up duplicates.</p>
+            <span class="feature-overline">TEMPLATES</span>
+            <h3>Design once, fill in forever.</h3>
+            <p>A template owns the layout for every entry of a content type. Editors fill in fields, and a single entry gets its own design only when it needs one.</p>
           </div>
           <div class="dream-preview" aria-hidden="true">
-            <div class="dream-preview-head"><BrainCircuit :size="23" /><span><strong>Dreaming Mode</strong><small>Reflecting on past conversations</small></span></div>
+            <div class="dream-preview-head"><LayoutTemplate :size="23" /><span><strong>Template system</strong><small>Shared design, per-entry content</small></span></div>
             <div class="dream-steps">
-              <div class="dream-step"><span class="dream-step-icon"><MessageCircle :size="19" /></span><span>Review<br />conversations</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><Sparkles :size="19" /></span><span>Find lasting<br />facts</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><FileText :size="19" /></span><span>Update<br />documents</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><Palette :size="19" /></span><span>Design<br />template</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><Link2 :size="19" /></span><span>Bind<br />fields</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><Globe :size="19" /></span><span>Publish<br />entries</span></div>
             </div>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="workspace" id="workspace">
+    <section class="workspace" id="headless">
       <div class="workspace-bg"></div>
-      <div class="section-kicker light reveal">Beyond the desktop</div>
-      <div class="workspace-heading reveal"><h2>Your AI, wherever<br /><em>you are.</em></h2><p>Keep the conversation going from your favorite chat app, and schedule work for Cynosure to handle at the right time.</p></div>
+      <div class="section-kicker light reveal">Beyond the website</div>
+      <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Use the built-in website, go headless, or both. Every way in is guarded by the same scoped access tokens.</p></div>
       <div class="remote-grid">
-        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">REMOTE CHAT</span><h3>Message Cynosure from anywhere.</h3><p>Talk to your AI through Telegram, Discord, or Slack. Ask questions and continue conversations when you’re away from the workspace.</p><div class="remote-platforms"><span><Send :size="19" /> Telegram</span><span><img :src="`${assetBase}mcp-icons/discord-color-icon.svg`" alt="" /> Discord</span><span><img :src="`${assetBase}mcp-icons/slack-icon.svg`" alt="" /> Slack</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>Cynosure</strong><small>Always ready to help</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing">Can you summarize the latest project notes?</div><div class="preview-message incoming">Of course. Here are the three updates that matter most today…</div></div><div class="preview-input">Message Cynosure <Send :size="14" /></div></div></article>
-        <article class="remote-card remote-schedule reveal"><div class="remote-card-copy"><span class="feature-overline">SCHEDULES</span><h3>Put recurring work on the calendar.</h3><p>Schedule an agent to run a daily brief, weekly review, or any task you want done on a regular cadence.</p><div class="schedule-example"><CalendarClock :size="20" /><span><strong>Morning brief</strong><small>Every weekday · 08:30</small></span><CircleCheck :size="18" /></div></div><figure class="remote-schedule-shot"><img :src="`${assetBase}screenshots/schedule.png`" alt="Cynosure schedule screen showing recurring jobs and their status" loading="lazy" /></figure></article>
+        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">API + MCP</span><h3>Talk to your content from anywhere.</h3><p>Feed Next.js, Astro or a mobile app through the REST API with filters, sorting and locales. Or connect your coding agent to the embedded MCP endpoint, written in plain PHP.</p><div class="remote-platforms"><span><img :src="`${assetBase}mcp-icons/claude-code-icon.svg`" alt="" /> Claude Code</span><span><img :src="`${assetBase}mcp-icons/codex-icon.svg`" alt="" /> Codex</span><span><img :src="`${assetBase}mcp-icons/visual-studio-code-icon.svg`" alt="" /> VS Code</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>API explorer</strong><small>northstar-studio · public read</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing preview-code">GET /content/events?locale=de&amp;sort=date</div><div class="preview-message incoming preview-code">{{ apiSample }}</div></div><div class="preview-input">Authorization: Bearer ctcms_… <KeyRound :size="14" /></div></div></article>
+        <article class="remote-card remote-schedule reveal"><div class="remote-card-copy"><span class="feature-overline">ACCESS TOKENS</span><h3>Keys that open exactly one door.</h3><p>Scope tokens by action, content type, entry, media category and field. Give a frontend read access to one collection without exposing anything else.</p><div class="schedule-example"><KeyRound :size="20" /><span><strong>Website reader</strong><small>View · content, media · northstar-studio</small></span><CircleCheck :size="18" /></div></div><figure class="remote-schedule-shot"><img :src="`${assetBase}screenshots/api-tokens.png`" alt="CometCMS access tokens screen showing two scoped tokens" loading="lazy" /></figure></article>
       </div>
     </section>
 
@@ -276,88 +272,87 @@ function closeMenu() {
         <div class="personal-copy">
           <h2>Make it <em>yours.</em></h2>
         </div>
-        <p>Start with a question or hand Cynosure a task. Connect the tools you use and bring conversations, files, research, and everyday work into one place.</p>
+        <p>Start from the sample website or an empty workspace. Shape content types around your project and publish it as a site, an API, or both.</p>
       </div>
-      <div class="personal-feature-grid reveal" aria-label="Cynosure use cases">
+      <div class="personal-feature-grid reveal" aria-label="CometCMS use cases">
         <article>
-          <MessageCircle :size="21" /><span>01 / COMMUNICATION</span>
-          <h3>Stay on top of conversations.</h3>
-          <ul><li>Draft, reply to, search, and organize emails and messages.</li><li>Find unanswered requests, follow-ups, and loose ends.</li></ul>
-          <p class="use-case-tools">Gmail · Outlook · Slack</p>
+          <Globe :size="21" /><span>01 / WEBSITES</span>
+          <h3>Launch a site on any host.</h3>
+          <ul><li>Build landing pages, about pages and menus in the visual builder.</li><li>Share one header, footer and theme across every page.</li></ul>
+          <p class="use-case-tools">Page Builder · Themes · Menus</p>
         </article>
 
         <article>
-          <Search :size="21" /><span>02 / WEB &amp; RESEARCH</span>
-          <h3>Turn browsing into answers.</h3>
-          <ul><li>Research topics, websites, products, jobs, prices, and offers.</li><li>Extract, compare, summarize, and save what matters.</li></ul>
-          <p class="use-case-tools">Browser · YouTube · Connected sources</p>
+          <Newspaper :size="21" /><span>02 / BLOGS &amp; NEWS</span>
+          <h3>Publish on your schedule.</h3>
+          <ul><li>Write posts with rich text, media and categories.</li><li>Schedule publication and list posts with search and pagination.</li></ul>
+          <p class="use-case-tools">Rich text · Scheduling · Search</p>
         </article>
 
         <article>
-          <FolderOpen :size="21" /><span>03 / FILES &amp; FOLDERS</span>
-          <h3>Bring order to your files.</h3>
-          <ul><li>Analyze, rename, move, group, and organize local files.</li><li>Spot duplicates, old files, and messy downloads; convert formats.</li></ul>
-          <p class="use-case-tools">Local files · Google Drive</p>
+          <CalendarDays :size="21" /><span>03 / EVENTS &amp; LISTINGS</span>
+          <h3>Structure anything.</h3>
+          <ul><li>Model events, products or team members with custom fields.</li><li>Filter and sort lists by date, category or any field.</li></ul>
+          <p class="use-case-tools">Custom fields · Relations · Lists</p>
         </article>
 
         <article>
-          <FileText :size="21" /><span>04 / MEDIA &amp; DOCUMENTS</span>
-          <h3>Work with more than text.</h3>
-          <ul><li>Pull text from screenshots, scans, PDFs, and images.</li><li>Generate images and video clips for your projects.</li></ul>
-          <p class="use-case-tools">Documents · Images · Video</p>
+          <Languages :size="21" /><span>04 / MULTILINGUAL</span>
+          <h3>Speak every language.</h3>
+          <ul><li>Translate builder content and structured fields per locale.</li><li>Give each language its own URLs, with hreflang and sitemap entries.</li></ul>
+          <p class="use-case-tools">Locales · hreflang · Sitemap</p>
         </article>
 
         <article>
-          <BrainCircuit :size="21" /><span>05 / MEMORY &amp; KNOWLEDGE</span>
-          <h3>Find what you already know.</h3>
-          <ul><li>Search across chats, files, notes, and documents.</li><li>Pull related notes together and summarize them when you need it.</li></ul>
-          <p class="use-case-tools">Memory · Obsidian · Notes</p>
+          <Code2 :size="21" /><span>05 / HEADLESS</span>
+          <h3>Feed any frontend.</h3>
+          <ul><li>Expose content types to Next.js, Astro or mobile apps.</li><li>Filter, sort and resolve locales with a clean JSON API.</li></ul>
+          <p class="use-case-tools">REST API · OpenAPI · Webhooks</p>
         </article>
 
         <article>
-          <Settings2 :size="21" /><span>06 / AUTOMATION</span>
-          <h3>Put repeat work in motion.</h3>
-          <ul><li>Handle browser forms, desktop apps, and recurring workflows.</li><li>Triage GitHub issues and run multi-step tasks with previews and confirmations.</li></ul>
-          <p class="use-case-tools">GitHub · Browser · Schedules</p>
+          <Inbox :size="21" /><span>06 / FORMS</span>
+          <h3>Collect submissions.</h3>
+          <ul><li>Turn a content type into a form with your own messages.</li><li>Review incoming entries right in the CMS.</li></ul>
+          <p class="use-case-tools">Forms · Submissions · Webhooks</p>
         </article>
       </div>
-      <div class="personal-extras reveal"><span>THE LITTLE EXTRAS</span><p><Palette :size="16" /> Themes</p><p><Mic2 :size="16" /> Voice input</p><p><ShieldCheck :size="16" /> Tool permissions</p><p><EyeOff :size="16" /> No tracking</p><p><BarChart3 :size="16" /> Usage insights</p><p><DatabaseBackup :size="16" /> Local workspace</p></div>
+      <div class="personal-extras reveal"><span>THE LITTLE EXTRAS</span><p><Palette :size="16" /> Theme presets</p><p><DatabaseBackup :size="16" /> Backups</p><p><Webhook :size="16" /> Webhooks</p><p><Construction :size="16" /> Maintenance mode</p><p><Search :size="16" /> Site search</p><p><Users :size="16" /> Roles &amp; permissions</p></div>
     </section>
 
     <section class="cta-section" id="download">
       <div class="cta-inner">
         <div class="cta-copy reveal">
-          <div class="eyebrow"><span></span> Start building with Cynosure</div>
-          <h2>Your AI, ready<br /><em>for real work.</em></h2>
-          <p>Connect a model, add the tools and memory it needs, and put your ideas to work in one private workspace.</p>
+          <div class="eyebrow"><span></span> Start building with CometCMS</div>
+          <h2>Your website, live<br /><em>in minutes.</em></h2>
+          <p>Download the ZIP, upload it to any PHP host, and finish setup in the browser. No SSH, no CLI, no environment variables.</p>
           <div class="hero-actions"><a class="button primary platform-download"
-              href="https://github.com/Cynosure-AI/cynosure-app/releases"><span>Download for {{ currentPlatform
-                }}</span>
+              :href="links.download"><span>Download latest release</span>
               <ArrowDown :size="17" />
             </a></div>
           <div class="cta-providers">
-            <span class="cta-providers-title">Choose your provider</span>
+            <span class="cta-providers-title">Runs where PHP runs</span>
             <ul>
-              <li>OpenAI</li><li>Ollama</li>
-              <li>Anthropic</li><li>LM Studio</li>
-              <li>Gemini</li><li>OpenRouter</li>
+              <li>Shared hosting</li><li>Apache</li>
+              <li>Nginx</li><li>Caddy</li>
+              <li>VPS</li><li>Local PHP</li>
             </ul>
           </div>
           <div class="download-alternates">
-            <span>Also available for</span>
-            <a v-for="platform in alternatePlatforms" :key="platform"
-              href="https://github.com/Cynosure-AI/cynosure-app/releases">{{ platform }}</a>
+            <span>Or explore</span>
+            <a :href="links.source">Source code</a>
+            <a :href="links.releases">All releases</a>
           </div>
-          <small>Free to use · No tracking · Your data stays yours</small>
+          <small>Free &amp; open source · Apache 2.0 · No database</small>
         </div>
       </div>
     </section>
   </main>
 
-  <footer><a class="brand" href="#top"><img :src="`${assetBase}logo.png`" alt="" /><span>CYNOSURE</span></a>
-    <p>© 2026 Cynosure. Free to use</p>
-    <div><a href="https://cynosure-ai.github.io/docs/">Documentation</a><a
-        href="https://github.com/Cynosure-AI/cynosure-app/releases">Releases</a><a
-        href="https://github.com/Cynosure-AI/cynosure-app/issues">Support</a></div>
+  <footer><a class="brand" href="#top"><img :src="`${assetBase}logo.png`" alt="" /><span>COMET<b>CMS</b></span></a>
+    <p>© 2026 CometCMS. Open source under Apache 2.0</p>
+    <div><a :href="links.docs">Documentation</a><a
+        :href="links.releases">Releases</a><a
+        :href="links.issues">Support</a></div>
   </footer>
 </template>

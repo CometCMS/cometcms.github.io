@@ -1,27 +1,27 @@
-# Cynosure Landing Page
+# CometCMS Landing Page
 
-This repository contains the marketing landing page for **Cynosure**.
+This repository contains the marketing landing page for **CometCMS**.
 
-## What is Cynosure?
+## What is CometCMS?
 
-Cynosure is a private AI workspace that brings your models, tools, memory, agents, and automations together in one place. It lets you research ideas, recall project details, draft follow-ups, and organize files — with a long-term memory that grows alongside your work.
+CometCMS is a visual page builder and content CMS that runs on any shared PHP host. The whole CMS is a single PHP folder: no database, no Composer, no Node, no CLI and no SSH required.
 
 Key capabilities highlighted on the page:
 
-- **Memory you own** — plain Markdown documents in folders, with focused recall, revision history, and background Dreaming Mode that keeps them current.
-- **Agents & tools** — add tools, create agents, and automate repetitive work.
-- **MCP directory** — discover and add MCP servers in a few clicks, powered by Smithery and the official MCP Registry.
-- **Remote chat & schedules** — keep conversations going from Telegram, Discord, or Slack, and schedule recurring work.
-- **Private by design** — local workspace, tool permissions, and no tracking.
+- **Visual Page Builder** — templates with sections, columns and field bindings, a shared theme, header, footer and menus.
+- **Structured content** — content types with custom fields, stored as plain JSON files, with built-in backups.
+- **Localization** — one design across languages, with per-language URLs, hreflang and sitemap entries.
+- **Extensions** — ZIPs of reusable blocks, content types, components, templates and theme presets.
+- **Headless API and embedded MCP** — expose content types to any frontend or let an AI agent manage content, guarded by scoped access tokens.
 
-Cynosure is free to use and available for Windows, macOS, and Linux.
+CometCMS is free and open source under the Apache 2.0 license.
 
-- Documentation: https://cynosure-ai.github.io/docs/
-- Downloads: https://github.com/Cynosure-AI/cynosure-app/releases
+- Documentation: https://cometcms.github.io/CometCMS/
+- Downloads: https://github.com/CometCMS/CometCMS/releases
 
 ## About this repository
 
-This is the **Nuxt landing page** for Cynosure — a static marketing site presenting the product, its features, use cases, and download links. It is not the Cynosure application itself.
+This is the **Nuxt landing page** for CometCMS — a static marketing site presenting the product, its features, use cases and download links. It is not the CMS itself.
 
 Built with [Nuxt](https://nuxt.com/) and Tailwind CSS, and deployed as a static site.
 
@@ -40,4 +40,4 @@ npm run build
 
 ### GitHub Pages
 
-The Pages workflow builds with Node 24 and publishes `.output/public`. In the repository's Pages settings, select **GitHub Actions** as the build and deployment source. Because the repository is named `cynosure-ai.github.io`, GitHub Pages serves it at the organization root, `https://cynosure-ai.github.io/`, and the workflow uses `/` as Nuxt's base path. For a custom domain at its root, set the repository Actions variable `NUXT_APP_BASE_URL` to `/`.
+The Pages workflow builds with Node 24 and publishes `.output/public`. In the repository's Pages settings, select **GitHub Actions** as the build and deployment source. Because the repository is named `cometcms.github.io`, GitHub Pages serves it at the organization root, `https://cometcms.github.io/`, and the workflow uses `/` as Nuxt's base path. For a custom domain at its root, set the repository Actions variable `NUXT_APP_BASE_URL` to `/`.
