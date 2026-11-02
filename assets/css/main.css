@@ -1857,6 +1857,9 @@ main {
   font-size: 10px;
   white-space: pre-wrap;
 }
+.preview-message.preview-code {
+  max-width: 92%;
+}
 .preview-message.incoming {
   align-self: flex-start;
   background: #2b313a;
@@ -1870,50 +1873,6 @@ main {
   padding: 10px;
   color: #84939d;
   font-size: 10px;
-}
-.schedule-example {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  max-width: 365px;
-  margin-top: 25px;
-  padding: 14px;
-  border: 1px solid #485871;
-  border-radius: 8px;
-  background: #21252b;
-}
-.schedule-example > svg:first-child {
-  color: #68a4ff;
-}
-.schedule-example span {
-  flex: 1;
-}
-.schedule-example strong,
-.schedule-example small {
-  display: block;
-}
-.schedule-example strong {
-  font-size: 12px;
-}
-.schedule-example small {
-  margin-top: 3px;
-  color: #95a2aa;
-  font-size: 10px;
-}
-.schedule-example > svg:last-child {
-  color: #56c789;
-}
-.remote-schedule-shot {
-  width: 125%;
-  margin: 36px 0 0;
-  border: 1px solid #3f494f;
-  border-radius: 9px;
-  overflow: hidden;
-  box-shadow: 0 15px 50px #0008;
-}
-.remote-schedule-shot img {
-  display: block;
-  width: 100%;
 }
 @media (max-width: 1100px) {
   .hero {
@@ -2100,9 +2059,6 @@ main {
     min-height: 500px;
     padding: 25px;
   }
-  .remote-schedule-shot {
-    width: 145%;
-  }
 }
 @media (max-width: 390px) {
   .remote-card {
@@ -2181,19 +2137,6 @@ main {
   background:
     radial-gradient(circle at 50% 70%, #314d7738, transparent 53%), #11181c;
 }
-.fields-shot {
-  flex: 1 0 auto;
-  margin: 22px 0 14px;
-  border: 1px solid #354147;
-  border-radius: 9px;
-  overflow: hidden;
-  box-shadow: 0 15px 50px #0008;
-}
-.fields-shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 .memory-card code {
   font: 0.92em var(--mono);
   color: #9fc4ff;
@@ -2210,53 +2153,28 @@ main {
   color: #9eabb3;
   font: 9px var(--mono);
 }
+.card-shot {
+  flex: 1 0 auto;
+  margin: 22px 0 14px;
+  border: 1px solid #354147;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #090a0f;
+  box-shadow: 0 15px 50px #0008;
+}
+.card-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.memory-recall-card .card-shot {
+  margin-bottom: 0;
+}
 .memory-recall-card,
 .memory-dream-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-.recall-preview {
-  margin-top: 22px;
-  border: 1px solid #39454b;
-  border-radius: 8px;
-  background: #1b2429;
-  overflow: hidden;
-}
-.recall-question {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 13px;
-  border-bottom: 1px solid #354047;
-  color: #d4dde1;
-  font-size: 11px;
-}
-.recall-question svg {
-  color: #6ca7ff;
-}
-.recall-result {
-  padding: 12px 13px;
-}
-.recall-result > span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 7px;
-  color: #79c7a3;
-  font: 8px var(--mono);
-  letter-spacing: 0.1em;
-}
-.recall-result strong {
-  display: block;
-  color: #edf1f2;
-  font-size: 11px;
-}
-.recall-result small {
-  display: block;
-  margin-top: 5px;
-  color: #8f9da5;
-  font-size: 10px;
 }
 .dream-preview {
   margin-top: 22px;

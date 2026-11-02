@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Blocks,
   CalendarDays,
-  CircleCheck,
   Code2,
   Construction,
   Database,
@@ -20,11 +19,13 @@ import {
   Menu,
   Newspaper,
   Palette,
+  Rocket,
   Search,
   Send,
   Server,
   ShieldCheck,
   Smartphone,
+  Triangle,
   Users,
   Webhook,
   X,
@@ -42,6 +43,10 @@ const links = {
 }
 
 const menuOpen = ref(false)
+const webhookSample = `{ "event": "content.published",
+  "occurred_at": "2026-06-02T09:14:00Z",
+  "data": { "type": "events",
+    "slug": "summer-open-studio" } }`
 let revealObserver: IntersectionObserver | undefined
 
 useSeoMeta({
@@ -180,19 +185,16 @@ function closeMenu() {
             <h3>Model content around your project.</h3>
             <p>Build content types from text, rich text, media, relations, selects, dates, repeaters and more. Every entry is stored as a plain JSON file, so there is no database to set up, migrate or lose.</p>
           </div>
-          <figure class="fields-shot"><img :src="`${assetBase}screenshots/custom-fields.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /></figure>
+          <figure class="card-shot"><img :src="`${assetBase}screenshots/custom-fields.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /></figure>
           <div class="memory-card-foot"><span>17 field types</span><span>Localized fields</span><span>JSON storage</span><span>OpenAPI</span></div>
         </article>
         <article class="memory-card memory-recall-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">API ONLY</span>
-            <h3>Skip the website if you like.</h3>
-            <p>Leave the Page Builder off and expose a content type through the REST API instead, with filters, sorting, pagination and <code>?locale=</code>.</p>
+            <span class="feature-overline">API EXPLORER</span>
+            <h3>Build the query, copy the URL.</h3>
+            <p>Leave the Page Builder off and serve a content type through the REST API. Pick filters, sorting and a locale in the admin, then copy a ready-to-use URL or curl command.</p>
           </div>
-          <div class="recall-preview" aria-hidden="true">
-            <div class="recall-question"><Search :size="16" /><span>GET /content/events?filter[event_type]=workshop</span></div>
-            <div class="recall-result"><span><CircleCheck :size="14" /> 200 OK · 1 ENTRY</span><strong>Type &amp; Color Workshop</strong><small>starts_at 2026-07-09 · capacity 16 · registration_open false</small></div>
-          </div>
+          <figure class="card-shot"><img :src="`${assetBase}screenshots/api-explorer.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /></figure>
         </article>
         <article class="memory-card memory-dream-card reveal">
           <div class="memory-card-copy">
@@ -215,10 +217,10 @@ function closeMenu() {
     <section class="workspace" id="integrations">
       <div class="workspace-bg"></div>
       <div class="section-kicker light reveal">Beyond the admin</div>
-      <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Connect your coding agent over MCP or build API queries without leaving the admin. Both use the same scoped access tokens.</p></div>
+      <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Let your coding agent manage content over MCP, and keep static frontends fresh with signed webhooks the moment something is published.</p></div>
       <div class="remote-grid">
         <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">EMBEDDED MCP</span><h3>Let your agent run the CMS.</h3><p>A Streamable HTTP MCP endpoint ships inside the PHP install. Agents can model content types, write entries and edit page layouts, with no Node or extra server.</p><div class="remote-platforms"><span><img :src="`${assetBase}mcp-icons/claude-code-icon.svg`" alt="" /> Claude Code</span><span><img :src="`${assetBase}mcp-icons/codex-icon.svg`" alt="" /> Codex</span><span><img :src="`${assetBase}mcp-icons/visual-studio-code-icon.svg`" alt="" /> VS Code</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>CometCMS MCP</strong><small>northstar-studio · connected</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing">Add a “Type &amp; Color Workshop” on July 9 with 16 seats and close registration.</div><div class="preview-message incoming">Created and published in Events. It shows up in the API and on /events right away.</div></div><div class="preview-input preview-code">POST /mcp/v1/workspaces/northstar-studio <Send :size="14" /></div></div></article>
-        <article class="remote-card remote-schedule reveal"><div class="remote-card-copy"><span class="feature-overline">API EXPLORER</span><h3>Build the query, copy the URL.</h3><p>Pick a collection, add filters, sorting and a locale, and copy a ready-to-use URL or curl command for your frontend.</p><div class="schedule-example"><Code2 :size="20" /><span><strong>GET /content/events</strong><small>limit 20 · sort newest first · public read</small></span><CircleCheck :size="18" /></div></div><figure class="remote-schedule-shot"><img :src="`${assetBase}screenshots/api-explorer.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /></figure></article>
+        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">WEBHOOKS</span><h3>Rebuild the moment you publish.</h3><p>Notify any HTTPS endpoint when entries are created, updated, published, unpublished, deleted or restored. Trigger a static site rebuild or sync another system, with every payload signed.</p><div class="remote-platforms"><span><Rocket :size="18" /> Netlify</span><span><Triangle :size="18" /> Vercel</span><span><img :src="`${assetBase}mcp-icons/github-icon.svg`" alt="" /> GitHub Actions</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><Webhook :size="18" /></span><div><strong>Site rebuild</strong><small>content.published · content.unpublished</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing preview-code">POST /build_hooks/northstar · 200 OK</div><div class="preview-message incoming preview-code">{{ webhookSample }}</div></div><div class="preview-input preview-code">X-CometCMS-Signature: sha256=9f2c… <ShieldCheck :size="14" /></div></div></article>
       </div>
     </section>
 
