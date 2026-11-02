@@ -3,31 +3,28 @@ import {
   ArrowDown,
   ArrowUpRight,
   Blocks,
-  BriefcaseBusiness,
   CalendarDays,
   CircleCheck,
-  CloudSun,
   Code2,
   Construction,
   Database,
   DatabaseBackup,
   FileJson,
-  FolderOpen,
   Globe,
   Inbox,
   KeyRound,
   Languages,
-  Layers,
   LayoutTemplate,
   Link2,
-  ListTree,
+  ListFilter,
   Menu,
   Newspaper,
   Palette,
   Search,
+  Send,
   Server,
-  ToggleRight,
-  Upload,
+  ShieldCheck,
+  Smartphone,
   Users,
   Webhook,
   X,
@@ -40,25 +37,11 @@ const links = {
   source: 'https://github.com/CometCMS/CometCMS',
   issues: 'https://github.com/CometCMS/CometCMS/issues',
   docs: 'https://cometcms.github.io/CometCMS/',
-  extensionsGuide: 'https://cometcms.github.io/CometCMS/guide/extensions',
+  websiteGuide: 'https://cometcms.github.io/CometCMS/guide/website',
   extensionExamples: 'https://github.com/CometCMS/CometCMS/tree/main/examples/extensions',
 }
 
 const menuOpen = ref(false)
-const featuredExtensions = [
-  { name: 'Comet Essentials', description: 'Testimonials, pricing, maps, slideshows, stats and more.', category: 'Blocks', version: '1.8.1', icon: Blocks },
-  { name: 'Comet ThemePack', description: 'Neo-Brutalism, Industrial, Material and Orbital presets.', category: 'Themes', version: '2.0.0', icon: Palette },
-  { name: 'Portfolio', description: 'Project case studies with a field-bound template.', category: 'Content type', version: '1.1.0', icon: BriefcaseBusiness },
-  { name: 'Menu Variations', description: 'Pills, tabs, cards and sidebars from your menus.', category: 'Navigation', version: '1.1.0', icon: ListTree },
-  { name: 'Fancy Containers', description: 'Geometric forms, soft lights and deep-space skies.', category: 'Layout', version: '1.1.0', icon: Layers },
-  { name: 'Weather', description: 'Current weather for a place, via Open-Meteo.', category: 'Data', version: '2.0.0', icon: CloudSun },
-] as const
-const apiSample = `{ "data": [
-  { "title": "Sommer-Atelier",
-    "date": "2026-06-12",
-    "location": "Studio Nord" },
-  … ],
-  "meta": { "total": 2 } }`
 let revealObserver: IntersectionObserver | undefined
 
 useSeoMeta({
@@ -111,8 +94,8 @@ function closeMenu() {
       <span>COMET<b>CMS</b></span>
     </a>
     <nav aria-label="Main navigation">
-      <a href="#features" @click="closeMenu">Features</a>
-      <a href="#extensions" @click="closeMenu">Extensions</a>
+      <a href="#builder" @click="closeMenu">Page Builder</a>
+      <a href="#headless" @click="closeMenu">Headless</a>
       <a href="#use-cases" @click="closeMenu">Use Cases</a>
       <a :href="links.docs" target="_blank" rel="noreferrer">Documentation
         <span>↗</span></a>
@@ -154,115 +137,88 @@ function closeMenu() {
 
     <section class="overview-band" id="features">
       <div class="overview-title"><div class="section-kicker">A complete CMS</div><h2>All you need<br />to publish.</h2></div>
-      <a class="overview-card" href="#content"><span class="overview-icon"><LayoutTemplate :size="26" /></span><div><h3>Page Builder</h3><p>Design templates with sections, columns and field bindings. Editors fill in content while the design stays consistent.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
-      <a class="overview-card" href="#content"><span class="overview-icon"><Database :size="26" /></span><div><h3>Structured content</h3><p>Content types with custom fields for text, media, relations and dates, saved as plain JSON files.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
-      <a class="overview-card" href="#headless"><span class="overview-icon"><Code2 :size="26" /></span><div><h3>API &amp; MCP</h3><p>Expose a content type to any frontend, or let an AI agent manage content through the built-in MCP endpoint.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <a class="overview-card" href="#builder"><span class="overview-icon"><LayoutTemplate :size="26" /></span><div><h3>Page Builder</h3><p>Design pages visually with sections, columns, blocks and field bindings. Editors fill in content while the design stays consistent.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <a class="overview-card" href="#headless"><span class="overview-icon"><Database :size="26" /></span><div><h3>Headless content</h3><p>Content types with custom fields for text, media, relations and dates, served to any frontend through a JSON API.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
+      <a class="overview-card" href="#integrations"><span class="overview-icon"><Code2 :size="26" /></span><div><h3>MCP &amp; developer tools</h3><p>Let an AI agent manage content through the built-in MCP endpoint, and build API queries in the admin.</p><span class="card-link">Learn more <ArrowUpRight :size="15" /></span></div></a>
     </section>
 
-    <section class="intro product-overview" id="extensions">
+    <section class="intro product-overview" id="builder">
       <div class="mcp-heading reveal">
-        <div><div class="section-kicker">Extensions</div><h2>Add blocks<br /><em>in a few clicks.</em></h2><p>Extend the Page Builder with ZIPs of reusable blocks, content types, components, templates and theme presets. Blocks render on the server, so pages stay fast and cacheable.</p></div>
-        <p>Start with Comet Essentials for testimonials, pricing, maps, slideshows and stats, or pick a look from the ThemePack. Writing your own block takes a block.json and an HTML template, with JSON schemas and a CLI to check your work.</p>
+        <div><div class="section-kicker">Visual Page Builder</div><h2>Design it visually.<br /><em>Publish it instantly.</em></h2><p>What you see on the canvas is what visitors get. Drag in sections and blocks, click any element to edit it, and bind it to your content fields. Pages are rendered by PHP on your server, cached, and ship JavaScript only where a block needs it.</p></div>
+        <p>Templates own the design of every entry in a content type, so a new blog post or event looks right the moment it is published. Need more blocks? Extensions add testimonials, pricing, maps, slideshows, stats and theme presets.</p>
       </div>
       <div class="mcp-stage reveal">
         <div class="mcp-steps">
-          <div><span><Upload :size="28" /></span><p><strong>Upload</strong>Add an extension ZIP in the admin.</p></div>
-          <div><span><ToggleRight :size="28" /></span><p><strong>Review</strong>See every block and item before it installs.</p></div>
-          <div><span><Blocks :size="28" /></span><p><strong>Build</strong>New blocks appear in the Page Builder.</p></div>
-          <div><span><Palette :size="28" /></span><p><strong>Stay on theme</strong>Blocks follow your site’s colors and fonts.</p></div>
-          <div class="mcp-actions"><a class="button primary" :href="links.extensionExamples" target="_blank" rel="noreferrer">Browse extensions <ArrowUpRight :size="16" /></a><a class="button secondary" :href="links.extensionsGuide" target="_blank" rel="noreferrer">Build your own <ArrowUpRight :size="16" /></a></div>
+          <div><span><Blocks :size="28" /></span><p><strong>Drag and drop</strong>Sections, columns, blocks and components.</p></div>
+          <div><span><Link2 :size="28" /></span><p><strong>Bind your fields</strong>Headings and images pull from your content.</p></div>
+          <div><span><Smartphone :size="28" /></span><p><strong>Check every device</strong>Columns and visibility per breakpoint.</p></div>
+          <div><span><Languages :size="28" /></span><p><strong>Every language</strong>One design, translated content, own URLs.</p></div>
+          <div class="mcp-actions"><a class="button primary" :href="links.websiteGuide" target="_blank" rel="noreferrer">Builder guide <ArrowUpRight :size="16" /></a><a class="button secondary" :href="links.extensionExamples" target="_blank" rel="noreferrer">Extensions <ArrowUpRight :size="16" /></a></div>
         </div>
-        <div class="mcp-showcase" aria-label="Illustration of the CometCMS extension library">
-          <div class="floating-service float-github"><Blocks :size="40" /></div>
+        <div class="mcp-showcase" aria-label="Screenshot of the CometCMS Page Builder">
+          <div class="floating-service float-github"><LayoutTemplate :size="40" /></div>
           <div class="floating-service float-slack"><Palette :size="40" /></div>
-          <div class="floating-service float-drive"><LayoutTemplate :size="40" /></div>
-          <div class="mcp-browser">
-            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> EXTENSIONS</span></div>
-            <div class="mcp-browser-body">
-              <aside class="mcp-sidebar"><div class="mcp-search"><Search :size="13" /> Search extensions...</div><b>Installed <small>6</small></b><span>Blocks <small>22</small></span><span>Themes <small>4</small></span><em>INCLUDES</em><span>Content types</span><span>Components</span><span>Templates</span><span>Fonts</span><span class="mcp-custom">＋ Upload ZIP</span></aside>
-              <div class="mcp-results"><div class="mcp-results-head"><div><strong>Installed</strong><small>Blocks, presets and starter content for your site.</small></div><span>Name⌄</span></div><div class="mcp-result-grid"><div v-for="extension in featuredExtensions" :key="extension.name" class="mcp-result-card"><div class="mcp-result-title"><span class="mcp-result-icon"><component :is="extension.icon" :size="24" /></span><div><strong>{{ extension.name }}</strong><small>{{ extension.description }}</small></div></div><div class="mcp-result-foot"><span>{{ extension.category }} · v{{ extension.version }}</span><span class="install-label">Enabled</span></div></div></div></div>
-            </div>
-          </div>
+          <div class="floating-service float-drive"><Smartphone :size="40" /></div>
+          <figure class="mcp-browser builder-shot">
+            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER</span></div>
+            <img :src="`${assetBase}screenshots/page-builder.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" loading="lazy" />
+          </figure>
         </div>
       </div>
     </section>
 
-    <section class="memory-section" id="content">
-      <div class="section-kicker reveal">Visual builder, structured content</div>
+    <section class="memory-section" id="headless">
+      <div class="section-kicker reveal">Headless CMS</div>
       <div class="memory-heading reveal">
-        <h2>Content that keeps<br /><em>its shape.</em></h2>
-        <p>Model your content with custom fields, design how it looks once, and let editors work in a clean form. Everything is saved as plain files you can read, back up and move.</p>
+        <h2>Custom fields.<br /><em>Any frontend.</em></h2>
+        <p>Don’t need a website? Model your content with custom fields, switch on API access and feed Next.js, Astro or a mobile app. Scoped tokens decide exactly who may read or change what.</p>
       </div>
       <div class="memory-grid">
         <article class="memory-card memory-docs-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">FILES + BACKUPS</span>
-            <h3>Content you can open in any editor.</h3>
-            <p>Every entry is a JSON file in the storage folder, so there is no database to provision, migrate or lose. Built-in backups bundle content, media and settings into one archive you can restore from the admin, and deleted entries wait in the trash.</p>
+            <span class="feature-overline">CUSTOM FIELDS</span>
+            <h3>Model content around your project.</h3>
+            <p>Build content types from text, rich text, media, relations, selects, dates, repeaters and more. Every entry is stored as a plain JSON file, so there is no database to set up, migrate or lose.</p>
           </div>
-          <div class="memory-doc" role="img" aria-label="Illustration of a content entry stored as a JSON file, next to a list of backups">
-            <div class="memory-doc-head">
-              <span class="memory-doc-path"><FolderOpen :size="14" /> storage / pages / <strong>about.json</strong></span>
-              <span class="memory-doc-rev"><CircleCheck :size="12" /> PUBLISHED</span>
-            </div>
-            <div class="memory-doc-body">
-              <div class="memory-doc-text">
-                <p class="md-line">{</p>
-                <p class="md-line md-key">"title": "About our studio",</p>
-                <p class="md-line md-key">"slug": "about",</p>
-                <p class="md-line md-key">"status": "published",</p>
-                <p class="md-line md-key">"fields": {</p>
-                <p class="md-line md-key md-nested">"tagline": "Thoughtful design for people and places",</p>
-                <p class="md-line md-key md-nested">"team_size": 6</p>
-                <p class="md-line md-key">}</p>
-                <p class="md-line">}</p>
-              </div>
-              <ol class="memory-doc-history">
-                <li class="current"><span>BACKUP</span><strong>Before redesign</strong><small>2h ago</small></li>
-                <li><span>BACKUP</span><strong>Launch day</strong><small>Yesterday</small></li>
-                <li><span>BACKUP</span><strong>New events</strong><small>Monday</small></li>
-                <li><span>BACKUP</span><strong>First setup</strong><small>Oct 24</small></li>
-              </ol>
-            </div>
-          </div>
-          <div class="memory-card-foot"><span>JSON files</span><span>No database</span><span>Backups</span><span>Restore</span></div>
+          <figure class="fields-shot"><img :src="`${assetBase}screenshots/custom-fields.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /></figure>
+          <div class="memory-card-foot"><span>17 field types</span><span>Localized fields</span><span>JSON storage</span><span>OpenAPI</span></div>
         </article>
         <article class="memory-card memory-recall-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">LOCALIZATION</span>
-            <h3>One design, every language.</h3>
-            <p>Share one design across languages, translate builder content and fields, and publish each language at its own URLs, with hreflang and sitemap entries included.</p>
+            <span class="feature-overline">API ONLY</span>
+            <h3>Skip the website if you like.</h3>
+            <p>Leave the Page Builder off and expose a content type through the REST API instead, with filters, sorting, pagination and <code>?locale=</code>.</p>
           </div>
           <div class="recall-preview" aria-hidden="true">
-            <div class="recall-question"><Languages :size="16" /><span>/about → /de/about</span></div>
-            <div class="recall-result"><span><CircleCheck :size="14" /> DE · TRANSLATED</span><strong>Über unser Studio</strong><small>Same template · hreflang linked · in sitemap.xml</small></div>
+            <div class="recall-question"><Search :size="16" /><span>GET /content/events?filter[event_type]=workshop</span></div>
+            <div class="recall-result"><span><CircleCheck :size="14" /> 200 OK · 1 ENTRY</span><strong>Type &amp; Color Workshop</strong><small>starts_at 2026-07-09 · capacity 16 · registration_open false</small></div>
           </div>
         </article>
         <article class="memory-card memory-dream-card reveal">
           <div class="memory-card-copy">
-            <span class="feature-overline">TEMPLATES</span>
-            <h3>Design once, fill in forever.</h3>
-            <p>A template owns the layout for every entry of a content type. Editors fill in fields, and a single entry gets its own design only when it needs one.</p>
+            <span class="feature-overline">SCOPED TOKENS</span>
+            <h3>Every key opens one door.</h3>
+            <p>Grant tokens by action, content type, entry, media category and field. A booking system can update capacity without touching anything else.</p>
           </div>
           <div class="dream-preview" aria-hidden="true">
-            <div class="dream-preview-head"><LayoutTemplate :size="23" /><span><strong>Template system</strong><small>Shared design, per-entry content</small></span></div>
+            <div class="dream-preview-head"><KeyRound :size="23" /><span><strong>Events editor</strong><small>content.update · events · 2 fields</small></span></div>
             <div class="dream-steps">
-              <div class="dream-step"><span class="dream-step-icon"><Palette :size="19" /></span><span>Design<br />template</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><Link2 :size="19" /></span><span>Bind<br />fields</span></div>
-              <div class="dream-step"><span class="dream-step-icon"><Globe :size="19" /></span><span>Publish<br />entries</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><ShieldCheck :size="19" /></span><span>Choose<br />actions</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><Database :size="19" /></span><span>Limit<br />content</span></div>
+              <div class="dream-step"><span class="dream-step-icon"><ListFilter :size="19" /></span><span>Allow<br />fields</span></div>
             </div>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="workspace" id="headless">
+    <section class="workspace" id="integrations">
       <div class="workspace-bg"></div>
-      <div class="section-kicker light reveal">Beyond the website</div>
-      <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Use the built-in website, go headless, or both. Every way in is guarded by the same scoped access tokens.</p></div>
+      <div class="section-kicker light reveal">Beyond the admin</div>
+      <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Connect your coding agent over MCP or build API queries without leaving the admin. Both use the same scoped access tokens.</p></div>
       <div class="remote-grid">
-        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">API + MCP</span><h3>Talk to your content from anywhere.</h3><p>Feed Next.js, Astro or a mobile app through the REST API with filters, sorting and locales. Or connect your coding agent to the embedded MCP endpoint, written in plain PHP.</p><div class="remote-platforms"><span><img :src="`${assetBase}mcp-icons/claude-code-icon.svg`" alt="" /> Claude Code</span><span><img :src="`${assetBase}mcp-icons/codex-icon.svg`" alt="" /> Codex</span><span><img :src="`${assetBase}mcp-icons/visual-studio-code-icon.svg`" alt="" /> VS Code</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>API explorer</strong><small>northstar-studio · public read</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing preview-code">GET /content/events?locale=de&amp;sort=date</div><div class="preview-message incoming preview-code">{{ apiSample }}</div></div><div class="preview-input">Authorization: Bearer ctcms_… <KeyRound :size="14" /></div></div></article>
-        <article class="remote-card remote-schedule reveal"><div class="remote-card-copy"><span class="feature-overline">ACCESS TOKENS</span><h3>Keys that open exactly one door.</h3><p>Scope tokens by action, content type, entry, media category and field. Give a frontend read access to one collection without exposing anything else.</p><div class="schedule-example"><KeyRound :size="20" /><span><strong>Website reader</strong><small>View · content, media · northstar-studio</small></span><CircleCheck :size="18" /></div></div><figure class="remote-schedule-shot"><img :src="`${assetBase}screenshots/api-tokens.png`" alt="CometCMS access tokens screen showing two scoped tokens" loading="lazy" /></figure></article>
+        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">EMBEDDED MCP</span><h3>Let your agent run the CMS.</h3><p>A Streamable HTTP MCP endpoint ships inside the PHP install. Agents can model content types, write entries and edit page layouts, with no Node or extra server.</p><div class="remote-platforms"><span><img :src="`${assetBase}mcp-icons/claude-code-icon.svg`" alt="" /> Claude Code</span><span><img :src="`${assetBase}mcp-icons/codex-icon.svg`" alt="" /> Codex</span><span><img :src="`${assetBase}mcp-icons/visual-studio-code-icon.svg`" alt="" /> VS Code</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>CometCMS MCP</strong><small>northstar-studio · connected</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing">Add a “Type &amp; Color Workshop” on July 9 with 16 seats and close registration.</div><div class="preview-message incoming">Created and published in Events. It shows up in the API and on /events right away.</div></div><div class="preview-input preview-code">POST /mcp/v1/workspaces/northstar-studio <Send :size="14" /></div></div></article>
+        <article class="remote-card remote-schedule reveal"><div class="remote-card-copy"><span class="feature-overline">API EXPLORER</span><h3>Build the query, copy the URL.</h3><p>Pick a collection, add filters, sorting and a locale, and copy a ready-to-use URL or curl command for your frontend.</p><div class="schedule-example"><Code2 :size="20" /><span><strong>GET /content/events</strong><small>limit 20 · sort newest first · public read</small></span><CircleCheck :size="18" /></div></div><figure class="remote-schedule-shot"><img :src="`${assetBase}screenshots/api-explorer.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /></figure></article>
       </div>
     </section>
 
