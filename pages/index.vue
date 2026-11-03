@@ -17,6 +17,7 @@ import {
   Link2,
   ListFilter,
   Menu,
+  Moon,
   Newspaper,
   Palette,
   Rocket,
@@ -25,6 +26,7 @@ import {
   Server,
   ShieldCheck,
   Smartphone,
+  Sun,
   Triangle,
   Users,
   Webhook,
@@ -43,11 +45,18 @@ const links = {
 }
 
 const menuOpen = ref(false)
+const themeStorageKey = 'cometcms-theme'
+const themeColors = { dark: '#060a12', light: '#f6f8fb' }
+// Runs before first paint so the stored or system theme never flashes. The
+// theme attribute and theme-color meta stay out of useHead so hydration cannot
+// reset them; without JavaScript the page keeps the dark base design.
+const themeBootstrap = `(function(){var d=document.documentElement,t;try{t=localStorage.getItem('${themeStorageKey}')}catch(e){}if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';d.dataset.theme=t;var m=document.createElement('meta');m.name='theme-color';m.content=t==='light'?'${themeColors.light}':'${themeColors.dark}';document.head.appendChild(m)})()`
 const webhookSample = `{ "event": "content.published",
   "occurred_at": "2026-06-02T09:14:00Z",
   "data": { "type": "events",
     "slug": "summer-open-studio" } }`
 let revealObserver: IntersectionObserver | undefined
+let systemTheme: MediaQueryList | undefined
 
 useSeoMeta({
   title: 'CometCMS — The CMS that fits on any PHP host',
@@ -68,7 +77,7 @@ useHead({
       href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap',
     },
   ],
-  meta: [{ name: 'theme-color', content: '#060a12' }],
+  script: [{ innerHTML: themeBootstrap, tagPosition: 'head' }],
 })
 
 onMounted(() => {
@@ -82,12 +91,46 @@ onMounted(() => {
   }, { threshold: 0.12 })
 
   document.querySelectorAll('.reveal').forEach(element => revealObserver?.observe(element))
+
+  systemTheme = matchMedia('(prefers-color-scheme: light)')
+  systemTheme.addEventListener('change', followSystemTheme)
 })
 
-onBeforeUnmount(() => revealObserver?.disconnect())
+onBeforeUnmount(() => {
+  revealObserver?.disconnect()
+  systemTheme?.removeEventListener('change', followSystemTheme)
+})
 
 function closeMenu() {
   menuOpen.value = false
+}
+
+function applyTheme(theme: 'light' | 'dark') {
+  document.documentElement.dataset.theme = theme
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[theme])
+}
+
+function storedTheme() {
+  try {
+    return localStorage.getItem(themeStorageKey)
+  } catch {
+    return null
+  }
+}
+
+// Until a visitor picks a theme, the page follows the system setting.
+function followSystemTheme(event: MediaQueryListEvent) {
+  if (!storedTheme()) applyTheme(event.matches ? 'light' : 'dark')
+}
+
+function toggleTheme() {
+  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
+  applyTheme(next)
+  try {
+    localStorage.setItem(themeStorageKey, next)
+  } catch {
+    // Storage can be unavailable (private mode); the choice then lasts for this visit.
+  }
 }
 </script>
 
@@ -105,6 +148,11 @@ function closeMenu() {
       <a :href="links.docs" target="_blank" rel="noreferrer">Documentation
         <span>↗</span></a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme"
+      @click="toggleTheme">
+      <Sun class="theme-icon-sun" :size="18" />
+      <Moon class="theme-icon-moon" :size="18" />
+    </button>
     <a class="nav-cta" :href="links.download">Download
       <ArrowDown :size="14" />
     </a>
@@ -140,7 +188,8 @@ function closeMenu() {
       <div class="hero-visual reveal delay-1">
         <figure class="mcp-browser builder-shot">
           <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER</span></div>
-          <img :src="`${assetBase}screenshots/page-builder.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" fetchpriority="high" />
+          <img class="shot-dark" :src="`${assetBase}screenshots/page-builder.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" loading="lazy" fetchpriority="high" />
+          <img class="shot-light" :src="`${assetBase}screenshots/page-builder-light.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" loading="lazy" fetchpriority="high" />
         </figure>
       </div>
     </section>
@@ -171,7 +220,8 @@ function closeMenu() {
           <div class="floating-service float-drive"><Smartphone :size="40" /></div>
           <figure class="mcp-browser builder-shot">
             <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER · TABLET</span></div>
-            <img :src="`${assetBase}screenshots/page-builder-tablet.webp`" alt="The CometCMS Page Builder in tablet preview, with the page outline on the left and the style options of a selected feature card on the right" width="3200" height="2000" loading="lazy" />
+            <img class="shot-dark" :src="`${assetBase}screenshots/page-builder-tablet.webp`" alt="The CometCMS Page Builder in tablet preview, with the page outline on the left and the style options of a selected feature card on the right" width="3200" height="2000" loading="lazy" />
+            <img class="shot-light" :src="`${assetBase}screenshots/page-builder-tablet-light.webp`" alt="The CometCMS Page Builder in tablet preview, with the page outline on the left and the style options of a selected feature card on the right" width="3200" height="2000" loading="lazy" />
           </figure>
         </div>
       </div>
@@ -190,7 +240,7 @@ function closeMenu() {
             <h3>Model content around your project.</h3>
             <p>Build content types from text, rich text, media, relations, selects, dates, repeaters and more. Every entry is stored as a plain JSON file, so there is no database to set up, migrate or lose.</p>
           </div>
-          <figure class="card-shot"><img :src="`${assetBase}screenshots/custom-fields.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /></figure>
+          <figure class="card-shot"><img class="shot-dark" :src="`${assetBase}screenshots/custom-fields.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /><img class="shot-light" :src="`${assetBase}screenshots/custom-fields-light.webp`" alt="The custom fields of an Events content type in CometCMS: summary, start date, location, event type, capacity, registration and cover image" width="2560" height="1820" loading="lazy" /></figure>
           <div class="memory-card-foot"><span>17 field types</span><span>Localized fields</span><span>JSON storage</span><span>OpenAPI</span></div>
         </article>
         <article class="memory-card memory-recall-card reveal">
@@ -199,7 +249,7 @@ function closeMenu() {
             <h3>Build the query, copy the URL.</h3>
             <p>Leave the Page Builder off and serve a content type through the REST API. Pick filters, sorting and a locale in the admin, then copy a ready-to-use URL or curl command.</p>
           </div>
-          <figure class="card-shot"><img :src="`${assetBase}screenshots/api-explorer.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /></figure>
+          <figure class="card-shot"><img class="shot-dark" :src="`${assetBase}screenshots/api-explorer.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /><img class="shot-light" :src="`${assetBase}screenshots/api-explorer-light.webp`" alt="The CometCMS API explorer building a request for the Events collection" width="2560" height="1620" loading="lazy" /></figure>
         </article>
         <article class="memory-card memory-dream-card reveal">
           <div class="memory-card-copy">
@@ -225,7 +275,7 @@ function closeMenu() {
       <div class="workspace-heading reveal"><h2>Your content,<br /><em>wherever it ships.</em></h2><p>Let your coding agent manage content over MCP, and keep static frontends fresh with signed webhooks the moment something is published.</p></div>
       <div class="remote-grid">
         <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">EMBEDDED MCP</span><h3>Let your agent run the CMS.</h3><p>A Streamable HTTP MCP endpoint ships inside the PHP install. Agents can model content types, write entries and edit page layouts, with no Node or extra server.</p><div class="remote-platforms"><span><img :src="`${assetBase}mcp-icons/claude-code-icon.svg`" alt="" /> Claude Code</span><span><img :src="`${assetBase}mcp-icons/codex-icon.svg`" alt="" /> Codex</span><span><img :src="`${assetBase}mcp-icons/visual-studio-code-icon.svg`" alt="" /> VS Code</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><img :src="`${assetBase}logo.png`" alt="" /></span><div><strong>CometCMS MCP</strong><small>northstar-studio · connected</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing">Add a “Type &amp; Color Workshop” on July 9 with 16 seats and close registration.</div><div class="preview-message incoming">Created and published in Events. It shows up in the API and on /events right away.</div></div><div class="preview-input preview-code">POST /mcp/v1/workspaces/northstar-studio <Send :size="14" /></div></div></article>
-        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">WEBHOOKS</span><h3>Rebuild the moment you publish.</h3><p>Notify any HTTPS endpoint when entries are created, updated, published, unpublished, deleted or restored. Trigger a static site rebuild or sync another system, with every payload signed.</p><div class="remote-platforms"><span><Rocket :size="18" /> Netlify</span><span><Triangle :size="18" /> Vercel</span><span><img :src="`${assetBase}mcp-icons/github-icon.svg`" alt="" /> GitHub Actions</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><Webhook :size="18" /></span><div><strong>Site rebuild</strong><small>content.published · content.unpublished</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing preview-code">POST /build_hooks/northstar · 200 OK</div><div class="preview-message incoming preview-code">{{ webhookSample }}</div></div><div class="preview-input preview-code">X-CometCMS-Signature: sha256=9f2c… <ShieldCheck :size="14" /></div></div></article>
+        <article class="remote-card remote-chat reveal"><div class="remote-card-copy"><span class="feature-overline">WEBHOOKS</span><h3>Rebuild the moment you publish.</h3><p>Notify any HTTPS endpoint when entries are created, updated, published, unpublished, deleted or restored. Trigger a static site rebuild or sync another system, with every payload signed.</p><div class="remote-platforms"><span><Rocket :size="18" /> Netlify</span><span><Triangle :size="18" /> Vercel</span><span><img class="github-mark" :src="`${assetBase}mcp-icons/github-icon.svg`" alt="" /> GitHub Actions</span></div></div><div class="remote-chat-preview" aria-hidden="true"><div class="preview-head"><span class="preview-avatar"><Webhook :size="18" /></span><div><strong>Site rebuild</strong><small>content.published · content.unpublished</small></div><span class="online-dot"></span></div><div class="preview-messages"><div class="preview-message outgoing preview-code">POST /build_hooks/northstar · 200 OK</div><div class="preview-message incoming preview-code">{{ webhookSample }}</div></div><div class="preview-input preview-code">X-CometCMS-Signature: sha256=9f2c… <ShieldCheck :size="14" /></div></div></article>
       </div>
     </section>
 
