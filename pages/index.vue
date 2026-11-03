@@ -137,7 +137,12 @@ function closeMenu() {
         </div>
       </div>
 
-      <div class="hero-visual reveal delay-1"><WorkflowChatDemo /></div>
+      <div class="hero-visual reveal delay-1">
+        <figure class="mcp-browser builder-shot">
+          <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER</span></div>
+          <img :src="`${assetBase}screenshots/page-builder.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" fetchpriority="high" />
+        </figure>
+      </div>
     </section>
 
     <section class="overview-band" id="features">
@@ -165,8 +170,8 @@ function closeMenu() {
           <div class="floating-service float-slack"><Palette :size="40" /></div>
           <div class="floating-service float-drive"><Smartphone :size="40" /></div>
           <figure class="mcp-browser builder-shot">
-            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER</span></div>
-            <img :src="`${assetBase}screenshots/page-builder.webp`" alt="The CometCMS Page Builder editing a landing page, with the element library on the left and the inspector on the right" width="3200" height="2000" loading="lazy" />
+            <div class="mcp-browser-head"><span><img :src="`${assetBase}logo.png`" alt="" /> PAGE BUILDER · TABLET</span></div>
+            <img :src="`${assetBase}screenshots/page-builder-tablet.webp`" alt="The CometCMS Page Builder in tablet preview, with the page outline on the left and the style options of a selected feature card on the right" width="3200" height="2000" loading="lazy" />
           </figure>
         </div>
       </div>
