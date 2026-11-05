@@ -38,6 +38,19 @@ npm run dev
 npm run build
 ```
 
+### Languages
+
+English is available at `/` and German at `/de/`. The header language switcher
+keeps the current section when changing languages. Both pages are generated as
+static HTML, including translated metadata, accessibility labels, canonical URLs
+and `hreflang` links.
+
+Translations live in `i18n/locales/en.json` and `i18n/locales/de.json`. Keep their
+keys in sync; English defines the TypeScript message schema. To add a language,
+add its catalog and configuration in `i18n/index.ts`, create a page that renders
+`LandingPage` with that locale, and add its route to `nuxt.config.ts` and the Pages
+verification script.
+
 ### GitHub Pages
 
 The organization site lives in **`CometCMS/cometcms.github.io`** and is served at **https://cometcms.github.io/**. In the repository's **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source.
