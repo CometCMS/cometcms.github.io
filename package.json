@@ -10,6 +10,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
+    "pages:verify": "node scripts/verify-pages.mjs",
     "css:audit": "node scripts/css-audit.mjs"
   },
   "dependencies": {

@@ -40,4 +40,13 @@ npm run build
 
 ### GitHub Pages
 
-The Pages workflow builds with Node 24 and publishes `.output/public`. In the repository's Pages settings, select **GitHub Actions** as the build and deployment source. Because the repository is named `cometcms.github.io`, GitHub Pages serves it at the organization root, `https://cometcms.github.io/`, and the workflow uses `/` as Nuxt's base path. For a custom domain at its root, set the repository Actions variable `NUXT_APP_BASE_URL` to `/`.
+The organization site lives in **`CometCMS/cometcms.github.io`** and is served at **https://cometcms.github.io/**. In the repository's **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source.
+
+The Pages workflow builds with Node 24, verifies the generated asset URLs, and publishes `.output/public`. It explicitly sets `NUXT_APP_BASE_URL` to `/`, overriding any old repository variable. This organization site must not use `/cometcms.github.io/` as its base path: those asset requests redirect to HTML and cause JavaScript module MIME errors.
+
+Push to `main` or run **Deploy Nuxt site to Pages** manually from the Actions tab to deploy. To verify the static output locally:
+
+```bash
+npm run build
+npm run pages:verify
+```
